@@ -65,8 +65,16 @@ def call_games(date_yesterday):
     df_center_home = df_arranged.loc[(df_arranged['player.position'] == 'C') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(1)
     df_center_visitor = df_arranged.loc[(df_arranged['player.position'] == 'C') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(1)
 
-    df_forward_home = df_arranged.loc[(df_arranged['player.position'] == 'F') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(2)
-    df_forward_visitor = df_arranged.loc[(df_arranged['player.position'] == 'F') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(2)
+    forward_count_home = forward_count_visitor = 2
+    print("=== ===")
+    print(df_center_home.empty)
+    if df_center_home.empty:
+        forward_count_home = 3
+    elif df_center_visitor.empty:
+        forward_count_visitor = 3
+
+    df_forward_home = df_arranged.loc[(df_arranged['player.position'] == 'F') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(forward_count_home)
+    df_forward_visitor = df_arranged.loc[(df_arranged['player.position'] == 'F') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(forward_count_visitor)
 
     df_guard_home = df_arranged.loc[(df_arranged['player.position'] == 'G') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(2)
     df_guard_visitor = df_arranged.loc[(df_arranged['player.position'] == 'G') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(2)    
