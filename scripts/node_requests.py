@@ -37,4 +37,3 @@ def simulate_node_request(compared_list):
             else:
                 print("V-C  |   ", end='')
             print(f"servo{ind} down | servo{ind+5} up")
-    # print(compared_list)
