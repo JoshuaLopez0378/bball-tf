@@ -36,16 +36,47 @@ def check_games(date_yesterday):
     
     return all_games_list, request_games_data
 
+def check_matchup(choice, request_games_data):
+    while True:
+        try:
+            matchup_data = request_games_data[choice-1]
 
-    # home_team_name = games_data["home_team"]["full_name"]
-    # home_team_score = games_data["home_team_score"]
-    # home_team_id = games_data["home_team"]["id"]
-    # print(f"HOME: {home_team_name}: {home_team_score} | (id:{home_team_id})")
+            home_team_name = matchup_data["home_team"]["full_name"]
+            home_team_score = matchup_data["home_team_score"]
+            home_team_id = matchup_data["home_team"]["id"]
+            print(f"HOME: {home_team_name}: {home_team_score} | (id:{home_team_id})")
 
-    # visitor_team_name = games_data["visitor_team"]["full_name"]
-    # visitor_team_score = games_data["visitor_team_score"]
-    # visitor_team_id = games_data["visitor_team"]["id"]
-    # print(f"AWAY: {visitor_team_name}: {visitor_team_score} | (id:{visitor_team_id})")
+            visitor_team_name = matchup_data["visitor_team"]["full_name"]
+            visitor_team_score = matchup_data["visitor_team_score"]
+            visitor_team_id = matchup_data["visitor_team"]["id"]
+            print(f"AWAY: {visitor_team_name}: {visitor_team_score} | (id:{visitor_team_id})")
+
+            matchup_details = {
+                "home": {
+                    "team_name": home_team_name,
+                    "team_score": home_team_score,
+                    "team_id": home_team_id
+                },
+                "visitor": {
+                    "team_name": visitor_team_name,
+                    "team_score": visitor_team_score,
+                    "team_id": visitor_team_id
+                }
+            }
+
+            if home_team_score > visitor_team_score:
+                matchup_details['team_win'] = home_team_name
+            else:
+                matchup_details['team_win'] = visitor_team_name
+            
+            json_matchup_details = json.dumps(matchup_details)
+            print(json_matchup_details)
+
+            return json_matchup_details
+
+        except IndexError:
+            print("Choice not exist")
+            return "Choice not exist"
 
     
     # # Put in another function next time
