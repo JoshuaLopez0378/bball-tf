@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-
 def compare_team_stats(stats_list):
     team_stats_list = stats_list
     df_home_team = team_stats_list[0]
@@ -11,6 +10,8 @@ def compare_team_stats(stats_list):
 
     # print(df_diff)
     return df_diff
+
+
 
 # servo1 - servo6   C
 # servo2 - servo7   F

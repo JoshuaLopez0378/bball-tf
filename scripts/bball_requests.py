@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 import pandas as pd
+import numpy as np
 import json
 from scripts.extra_functions.formatter import use_prime_position
 from scripts.constants import API_KEY, games_url, stats_url
@@ -26,13 +27,11 @@ def check_games(date_yesterday):
     print("=== ALL GAMES RESULT ===")
     request_games_result = request_games.json()
     request_games_data = request_games_result["data"]
-    # print(games_data)
 
     # List all games, "home vs away" format
     all_games_list = [f"{res[0] + 1} | {res[1]['home_team']['full_name']} VS {res[1]['visitor_team']['full_name']}" for res in enumerate(request_games_data)]
     print(all_games_list)
-    # for games in all_games_list:
-        # print(games)
+
     
     return all_games_list, request_games_data
 
@@ -78,7 +77,8 @@ def check_matchup(choice, request_games_data):
             print("Choice not exist")
             return "Choice not exist"
 
-    
+def check_team_stats():
+    pass
     # # Put in another function next time
     # # STATS
     # today_game_id = games_data["id"]
