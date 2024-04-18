@@ -6,7 +6,10 @@ import json
 from scripts.extra_functions.formatter import use_prime_position
 from scripts.constants import API_KEY, games_url, stats_url
 
-
+headers = {
+    "accept":"application/json",
+    "Authorization":API_KEY
+}
 
 def date_yesterday(days=1):
     now = datetime.today()
@@ -17,10 +20,7 @@ def date_yesterday(days=1):
 def check_games(date_yesterday): 
     # Request prerequisites
     today_date_url_param = f'?dates[]={date_yesterday}'
-    headers = {
-        "accept":"application/json",
-        "Authorization":API_KEY
-    }
+
 
     # Perform get request and take result
     request_games = requests.get(url=f"{games_url}{today_date_url_param}", headers=headers)
@@ -30,7 +30,7 @@ def check_games(date_yesterday):
 
     # List all games, "home vs away" format
     all_games_list = [f"{res[0] + 1} | {res[1]['home_team']['full_name']} VS {res[1]['visitor_team']['full_name']}" for res in enumerate(request_games_data)]
-    print(all_games_list)
+    # print(all_games_list)
 
     
     return all_games_list, request_games_data
@@ -51,6 +51,7 @@ def check_matchup(choice, request_games_data):
             print(f"AWAY: {visitor_team_name}: {visitor_team_score} | (id:{visitor_team_id})")
 
             matchup_details = {
+                "game_id": matchup_data['id'],
                 "home": {
                     "team_name": home_team_name,
                     "team_score": home_team_score,
@@ -69,28 +70,29 @@ def check_matchup(choice, request_games_data):
                 matchup_details['team_win'] = visitor_team_name
             
             json_matchup_details = json.dumps(matchup_details)
-            print(json_matchup_details)
-
             return json_matchup_details
 
         except IndexError:
             print("Choice not exist")
             return "Choice not exist"
 
-def check_team_stats():
-    pass
-    # # Put in another function next time
+def check_team_stats(json_matchup_details):
+    loaded_matchup_details = json.loads(json_matchup_details)
+
     # # STATS
-    # today_game_id = games_data["id"]
-    # game_id_url_param = f'?game_ids[]={today_game_id}'
+    today_game_id = loaded_matchup_details['game_id']
+    game_id_url_param = f'?game_ids[]={today_game_id}'
 
-    # stats = requests.get(url=stats_url + game_id_url_param , headers=headers)
-    # stats_result = stats.json()
-    # next_cursor = str(stats_result["meta"]["next_cursor"])
-    # stats2 = requests.get(url=stats_url + game_id_url_param + '&cursor=' + next_cursor, headers=headers)
-    # stats_result2 = stats2.json()
+    stats = requests.get(url=f"{stats_url}{game_id_url_param}" , headers=headers)
+    stats_result = stats.json()
+    next_cursor = str(stats_result["meta"]["next_cursor"])
+    stats2 = requests.get(url=stats_url + game_id_url_param + '&cursor=' + next_cursor, headers=headers)
+    stats_result2 = stats2.json()
+
+    return [stats_result['data'] + stats_result2['data']]
 
 
+# def check_top_5(stats_list):
     # print("==============================================================================")
     # pd.set_option('display.max_colwidth', 100)
 

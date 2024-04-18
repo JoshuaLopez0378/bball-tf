@@ -2,14 +2,15 @@ import pandas as pd
 import numpy as np
 def compare_team_stats(stats_list):
     team_stats_list = stats_list
-    df_home_team = team_stats_list[0]
-    df_visitor_team = team_stats_list[1]
+    print(team_stats_list)
+    # df_home_team = team_stats_list[0]
+    # df_visitor_team = team_stats_list[1]
     
-    df_diff = pd.DataFrame(df_home_team['player.position'])
-    df_diff['Winner'] = pd.DataFrame(np.where(df_home_team['pts'] > df_visitor_team['pts'], 'Home', 'Visitor'))
+    # df_diff = pd.DataFrame(df_home_team['player.position'])
+    # df_diff['Winner'] = pd.DataFrame(np.where(df_home_team['pts'] > df_visitor_team['pts'], 'Home', 'Visitor'))
 
     # print(df_diff)
-    return df_diff
+    # return df_diff
 
 
 
