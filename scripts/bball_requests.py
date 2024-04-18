@@ -89,8 +89,22 @@ def check_team_stats(json_matchup_details):
     stats2 = requests.get(url=stats_url + game_id_url_param + '&cursor=' + next_cursor, headers=headers)
     stats_result2 = stats2.json()
 
-    return [stats_result['data'] + stats_result2['data']]
+    df_stats_result = pd.json_normalize(stats_result['data'])
+    df_stats_result2 = pd.json_normalize(stats_result2['data'])
 
+    return pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
+
+def compare_player_stats(stats_list):
+    team_stats_list = stats_list
+    print(team_stats_list)
+    # df_home_team = team_stats_list[0]
+    # df_visitor_team = team_stats_list[1]
+    
+    # df_diff = pd.DataFrame(df_home_team['player.position'])
+    # df_diff['Winner'] = pd.DataFrame(np.where(df_home_team['pts'] > df_visitor_team['pts'], 'Home', 'Visitor'))
+
+    # print(df_diff)
+    # return df_diff
 
 # def check_top_5(stats_list):
     # print("==============================================================================")
