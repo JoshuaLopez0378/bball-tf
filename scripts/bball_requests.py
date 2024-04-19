@@ -89,16 +89,21 @@ def check_team_stats(json_matchup_details):
     stats2 = requests.get(url=stats_url + game_id_url_param + '&cursor=' + next_cursor, headers=headers)
     stats_result2 = stats2.json()
 
-    df_stats_result = pd.json_normalize(stats_result['data'])
-    df_stats_result2 = pd.json_normalize(stats_result2['data'])
+    df_stats_result = pd.json_normalize(stats_result['data'], meta=['id'])
+    df_stats_result2 = pd.json_normalize(stats_result2['data'], meta=['id'])
 
-    return pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
+    teams = pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
+
+    df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]
+    df_visitor_team = teams.loc[teams["team.id"] == loaded_matchup_details["visitor"]["team_id"]]
+    
+    return [df_home_team, df_visitor_team]
 
 def compare_player_stats(stats_list):
     team_stats_list = stats_list
-    print(team_stats_list)
-    # df_home_team = team_stats_list[0]
-    # df_visitor_team = team_stats_list[1]
+    # print(team_stats_list)
+    print(team_stats_list.columns)
+
     
     # df_diff = pd.DataFrame(df_home_team['player.position'])
     # df_diff['Winner'] = pd.DataFrame(np.where(df_home_team['pts'] > df_visitor_team['pts'], 'Home', 'Visitor'))
