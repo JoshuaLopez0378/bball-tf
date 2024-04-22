@@ -65,9 +65,9 @@ def check_matchup(choice, request_games_data):
             }
 
             if home_team_score > visitor_team_score:
-                matchup_details['team_win'] = home_team_name
+                matchup_details['team_win'] = home_team_id
             else:
-                matchup_details['team_win'] = visitor_team_name
+                matchup_details['team_win'] = visitor_team_id
             
             json_matchup_details = json.dumps(matchup_details)
             return json_matchup_details
@@ -92,28 +92,30 @@ def check_team_stats(json_matchup_details):
     df_stats_result = pd.json_normalize(stats_result['data'], meta=['id'])
     df_stats_result2 = pd.json_normalize(stats_result2['data'], meta=['id'])
 
+    # print(df_stats_result)
+
     teams = pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
 
     df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]
     df_visitor_team = teams.loc[teams["team.id"] == loaded_matchup_details["visitor"]["team_id"]]
     
-    return [df_home_team, df_visitor_team]
+    df_team_player_stats = pd.concat([df_home_team, df_visitor_team], ignore_index=True)
+    filtered_df_team_player_stats = df_team_player_stats[["id", "min", "player.id", "player.first_name", "player.last_name", "pts", "player.position", "team.id", "team.full_name", "game.id", "game.date"]]
+    filtered_df_team_player_stats = filtered_df_team_player_stats.copy()
+    filtered_df_team_player_stats.loc[:,("win")] = np.where(filtered_df_team_player_stats["team.id"] == loaded_matchup_details["team_win"], "Win" , "Lose")
+    sorted_df_team_player_stats = filtered_df_team_player_stats.sort_values(by=["team.id", "player.position", "pts"], ascending=False, ignore_index=True)
 
-def compare_player_stats(stats_list):
-    team_stats_list = stats_list
-    # print(team_stats_list)
-    print(team_stats_list.columns)
+    return sorted_df_team_player_stats
 
-    
-    # df_diff = pd.DataFrame(df_home_team['player.position'])
-    # df_diff['Winner'] = pd.DataFrame(np.where(df_home_team['pts'] > df_visitor_team['pts'], 'Home', 'Visitor'))
 
-    # print(df_diff)
-    # return df_diff
+def check_top_5(stats_list, team_ids=0):
+    pd.set_option('display.max_colwidth', 100)
+    print("==============================================================================")
+    stats_list["player.position"] = stats_list["player.position"].apply(use_prime_position)
+    # print(stats_list)
 
-# def check_top_5(stats_list):
-    # print("==============================================================================")
-    # pd.set_option('display.max_colwidth', 100)
+    df_center_home = stats_list.loc[(stats_list["player.position"] == 'C') & (stats_list["team.id"] == team_ids["home"])].head(1)
+    print(df_center_home)
 
     # df_stats_pg1 = pd.json_normalize(stats_result['data'],meta=['id'])
     # df_stats_pg2 = pd.json_normalize(stats_result2['data'],meta=['id'])
