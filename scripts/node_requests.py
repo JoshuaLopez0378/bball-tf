@@ -6,7 +6,13 @@ import numpy as np
 # servo4 - servo9   G
 # servo5 - servo10  G
 
-def simulate_node_request(compared_list):
+def node_request_game_win(win_team):
+    if win_team["home_visitor"].values[0] == "Home":
+        print("Move servo left")
+    else:
+        print("Move servo right")
+
+def node_request_player_win(compared_list):
     for index, row in compared_list.iterrows():
         ind = index+1
         if row["Winner"] == "Home":

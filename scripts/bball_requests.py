@@ -97,13 +97,19 @@ def check_team_stats(json_matchup_details):
     teams = pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
 
     df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]
+    df_home_team = df_home_team.copy()
+    df_home_team.loc[:, ("home_visitor")] = "Home"
+
     df_visitor_team = teams.loc[teams["team.id"] == loaded_matchup_details["visitor"]["team_id"]]
+    df_visitor_team = df_visitor_team.copy()
+    df_visitor_team.loc[:, ("home_visitor")] = "Visitor"
     
     df_team_player_stats = pd.concat([df_home_team, df_visitor_team], ignore_index=True)
-    filtered_df_team_player_stats = df_team_player_stats[["id", "min", "player.id", "player.first_name", "player.last_name", "pts", "player.position", "team.id", "team.full_name", "game.id", "game.date"]]
+    filtered_df_team_player_stats = df_team_player_stats[["id", "min", "player.id", "player.first_name", "player.last_name", "pts", "player.position", "team.id", "team.full_name", "game.id", "game.date", "home_visitor"]]
     filtered_df_team_player_stats = filtered_df_team_player_stats.copy()
     filtered_df_team_player_stats.loc[:,("win")] = np.where(filtered_df_team_player_stats["team.id"] == loaded_matchup_details["team_win"], "Win" , "Lose")
     sorted_df_team_player_stats = filtered_df_team_player_stats.sort_values(by=["team.id", "player.position", "pts"], ascending=False, ignore_index=True)
+    print(sorted_df_team_player_stats)
 
     return sorted_df_team_player_stats
 
@@ -165,4 +171,10 @@ def check_top_5(stats_list, team_ids=0):
 
     # print(home_df, "\n", visitor_df)
 
-    return [home_df, visitor_df]
+    home_visitor_df = pd.concat([home_df,visitor_df])
+
+    return home_visitor_df
+
+def check_winner_game(compared_list):
+    check_win = compared_list.loc[compared_list["win"] == "Win"][["home_visitor","team.full_name"]].head(1)
+    return check_win
