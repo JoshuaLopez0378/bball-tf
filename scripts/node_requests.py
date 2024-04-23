@@ -9,11 +9,9 @@ import numpy as np
 def node_request_game_win(win_team):
     print("=== Team win ===")
     if win_team["home_visitor"].values[0] == "Home":
-        print("Home")
-        print("Move servo left")
+        print("Home  |  Move servo left")
     else:
-        print("Visitor")
-        print("Move servo right")
+        print("Visitor  |  Move servo right")
 
 def node_request_player_win(compared_list):
     print("=== Player win ===")

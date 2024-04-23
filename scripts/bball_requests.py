@@ -136,40 +136,6 @@ def check_top_5(stats_list, team_ids=0):
 
     home_df = pd.concat([df_center_home, df_forward_home, df_guard_home], ignore_index=True)
     visitor_df = pd.concat([df_center_visitor, df_forward_visitor, df_guard_visitor], ignore_index=True)
-
-    # print(home_df, "\n", visitor_df)
-
-    # df_stats_pg1 = pd.json_normalize(stats_result['data'],meta=['id'])
-    # df_stats_pg2 = pd.json_normalize(stats_result2['data'],meta=['id'])
-    # df_all_stats = pd.concat([df_stats_pg1, df_stats_pg2], ignore_index=True)
-
-    # df_take_cols = df_all_stats[['player.jersey_number', 'player.first_name', 'player.last_name', 'player.position', 'pts', 'team.id', 'team.full_name', 'game.id']]
-    # df_arranged = df_take_cols.sort_values(by=['team.full_name', 'player.position', 'pts'], ascending=False, ignore_index=True)
-    # df_arranged["player.position"] = df_arranged['player.position'].apply(use_prime_position)
-
-
-    # df_center_home = df_arranged.loc[(df_arranged['player.position'] == 'C') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(1)
-    # df_center_visitor = df_arranged.loc[(df_arranged['player.position'] == 'C') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(1)
-
-    # forward_count_home = forward_count_visitor = 2
-    # print("=== ===")
-    # print(df_center_home.empty)
-    # if df_center_home.empty:
-    #     forward_count_home = 3
-    # elif df_center_visitor.empty:
-    #     forward_count_visitor = 3
-
-    # df_forward_home = df_arranged.loc[(df_arranged['player.position'] == 'F') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(forward_count_home)
-    # df_forward_visitor = df_arranged.loc[(df_arranged['player.position'] == 'F') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(forward_count_visitor)
-
-    # df_guard_home = df_arranged.loc[(df_arranged['player.position'] == 'G') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(2)
-    # df_guard_visitor = df_arranged.loc[(df_arranged['player.position'] == 'G') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(2)    
-
-    # home_df = pd.concat([df_center_home, df_forward_home, df_guard_home], ignore_index=True)
-    # visitor_df = pd.concat([df_center_visitor, df_forward_visitor, df_guard_visitor], ignore_index=True)
-
-    # print(home_df, "\n", visitor_df)
-
     home_visitor_df = pd.concat([home_df,visitor_df])
 
     return home_visitor_df
