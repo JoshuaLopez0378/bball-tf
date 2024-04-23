@@ -115,7 +115,24 @@ def check_top_5(stats_list, team_ids=0):
     # print(stats_list)
 
     df_center_home = stats_list.loc[(stats_list["player.position"] == 'C') & (stats_list["team.id"] == team_ids["home"])].head(1)
-    print(df_center_home)
+    df_center_visitor = stats_list.loc[(stats_list["player.position"] == 'C') & (stats_list["team.id"] == team_ids["visitor"])].head(1)
+
+    forward_count_home = forward_count_visitor = 2
+    if df_center_home.empty:
+        forward_count_home = 3
+    elif df_center_visitor.empty:
+        forward_count_visitor = 3
+
+    df_forward_home = stats_list.loc[(stats_list["player.position"] == 'F') & (stats_list["team.id"] == team_ids["home"])].head(forward_count_home)
+    df_forward_visitor = stats_list.loc[(stats_list["player.position"] == 'F') & (stats_list["team.id"] == team_ids["visitor"])].head(forward_count_visitor)
+
+    df_guard_home = stats_list.loc[(stats_list["player.position"] == 'G') & (stats_list["team.id"] == team_ids["home"])].head(2)
+    df_guard_visitor = stats_list.loc[(stats_list["player.position"] == 'G') & (stats_list["team.id"] == team_ids["visitor"])].head(2)
+
+    home_df = pd.concat([df_center_home, df_forward_home, df_guard_home], ignore_index=True)
+    visitor_df = pd.concat([df_center_visitor, df_forward_visitor, df_guard_visitor], ignore_index=True)
+
+    # print(home_df, "\n", visitor_df)
 
     # df_stats_pg1 = pd.json_normalize(stats_result['data'],meta=['id'])
     # df_stats_pg2 = pd.json_normalize(stats_result2['data'],meta=['id'])
@@ -148,4 +165,4 @@ def check_top_5(stats_list, team_ids=0):
 
     # print(home_df, "\n", visitor_df)
 
-    # return [home_df, visitor_df]
+    return [home_df, visitor_df]

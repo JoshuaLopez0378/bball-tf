@@ -18,6 +18,8 @@ json_matchup_details_load = json.loads(json_matchup_details)
 team_ids = {"home": json_matchup_details_load["home"]["team_id"], "visitor": json_matchup_details_load["visitor"]["team_id"]}
 stats_list = check_team_stats(json_matchup_details)
 compared_list = check_top_5(stats_list, team_ids)
-print(compared_list)  
+# print(compared_list)  
+# fin = simulate_node_request(compared_list)
+# print(fin)
 
 print("End")
