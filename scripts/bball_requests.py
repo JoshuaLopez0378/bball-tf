@@ -109,7 +109,6 @@ def check_team_stats(json_matchup_details):
     filtered_df_team_player_stats = filtered_df_team_player_stats.copy()
     filtered_df_team_player_stats.loc[:,("win")] = np.where(filtered_df_team_player_stats["team.id"] == loaded_matchup_details["team_win"], "Win" , "Lose")
     sorted_df_team_player_stats = filtered_df_team_player_stats.sort_values(by=["team.id", "player.position", "pts"], ascending=False, ignore_index=True)
-    print(sorted_df_team_player_stats)
 
     return sorted_df_team_player_stats
 
@@ -178,3 +177,10 @@ def check_top_5(stats_list, team_ids=0):
 def check_winner_game(compared_list):
     check_win = compared_list.loc[compared_list["win"] == "Win"][["home_visitor","team.full_name"]].head(1)
     return check_win
+
+def check_winner_position(compare_list):
+    df_home = compare_list.loc[compare_list["home_visitor"] == "Home"]
+    df_visitor = compare_list.loc[compare_list["home_visitor"] == "Visitor"]
+    df_win = df_home.where(df_home["pts"] > df_visitor["pts"], df_visitor)
+    
+    return df_win
