@@ -11,7 +11,7 @@ headers = {
     "Authorization":API_KEY
 }
 
-def date_yesterday(days=1):
+def date_yesterday(days=2):
     now = datetime.today()
     yester_date = now - timedelta(days=days)
     string_date = yester_date.strftime('%Y-%m-%d')
@@ -24,9 +24,13 @@ def check_games(date_yesterday):
 
     # Perform get request and take result
     request_games = requests.get(url=f"{games_url}{today_date_url_param}", headers=headers)
-    print("=== ALL GAMES RESULT ===")
+    # print("=== ALL GAMES RESULT ===") ------------------------------
     request_games_result = request_games.json()
     request_games_data = request_games_result["data"]
+
+    # For DB ------------------------------
+    print("------------------------------")
+    print(request_games_data)
 
     # List all games, "home vs away" format
     all_games_list = [f"{res[0] + 1} | {res[1]['home_team']['full_name']} VS {res[1]['visitor_team']['full_name']}" for res in enumerate(request_games_data)]
@@ -43,12 +47,12 @@ def check_matchup(choice, request_games_data):
             home_team_name = matchup_data["home_team"]["full_name"]
             home_team_score = matchup_data["home_team_score"]
             home_team_id = matchup_data["home_team"]["id"]
-            print(f"HOME: {home_team_name}: {home_team_score} | (id:{home_team_id})")
+            # print(f"HOME: {home_team_name}: {home_team_score} | (id:{home_team_id})") ------------------------------
 
             visitor_team_name = matchup_data["visitor_team"]["full_name"]
             visitor_team_score = matchup_data["visitor_team_score"]
             visitor_team_id = matchup_data["visitor_team"]["id"]
-            print(f"AWAY: {visitor_team_name}: {visitor_team_score} | (id:{visitor_team_id})")
+            # print(f"AWAY: {visitor_team_name}: {visitor_team_score} | (id:{visitor_team_id})") ------------------------------
 
             matchup_details = {
                 "game_id": matchup_data['id'],
@@ -76,6 +80,10 @@ def check_matchup(choice, request_games_data):
             print("Choice not exist")
             return "Choice not exist"
 
+        except:
+            print("Error")
+            return "Error"
+
 def check_team_stats(json_matchup_details):
     loaded_matchup_details = json.loads(json_matchup_details)
 
@@ -96,6 +104,11 @@ def check_team_stats(json_matchup_details):
 
     teams = pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
 
+    # For DB ------------------------------
+    print("------------------------------")
+    print(teams)
+    teams.to_csv("teams_stats_return.csv", index=False)
+
     df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]
     df_home_team = df_home_team.copy()
     df_home_team.loc[:, ("home_visitor")] = "Home"
@@ -115,7 +128,7 @@ def check_team_stats(json_matchup_details):
 
 def check_top_5(stats_list, team_ids=0):
     pd.set_option('display.max_colwidth', 100)
-    print("==============================================================================")
+    # print("==============================================================================") ------------------------------
     stats_list["player.position"] = stats_list["player.position"].apply(use_prime_position)
     # print(stats_list)
 
