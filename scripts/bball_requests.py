@@ -11,7 +11,7 @@ headers = {
     "Authorization":API_KEY
 }
 
-def date_yesterday(days=2):
+def date_yesterday(days=37): # Ideal 2024-04-24
     now = datetime.today()
     yester_date = now - timedelta(days=days)
     string_date = yester_date.strftime('%Y-%m-%d')
@@ -105,8 +105,8 @@ def check_team_stats(json_matchup_details):
     teams = pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
 
     # For DB ------------------------------
-    print("------------------------------")
-    print(teams)
+    # print("------------------------------")
+    # print(teams[["player.height"]])
     teams.to_csv("teams_stats_return.csv", index=False)
 
     df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]
