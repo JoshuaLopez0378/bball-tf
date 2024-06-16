@@ -5,6 +5,7 @@ import numpy as np
 import json
 from scripts.extra_functions.formatter import use_prime_position
 from scripts.constants import API_KEY, games_url, stats_url
+from scripts.db_insert_values import insert_to_all_stats, insert_to_all_players, insert_to_all_games, insert_to_all_teams
 
 headers = {
     "accept":"application/json",
@@ -29,8 +30,8 @@ def check_games(date_yesterday):
     request_games_data = request_games_result["data"]
 
     # For DB ------------------------------
-    print("------------------------------")
-    print(request_games_data)
+    # print("------------------------------")
+    # print(request_games_data)
 
     # List all games, "home vs away" format
     all_games_list = [f"{res[0] + 1} | {res[1]['home_team']['full_name']} VS {res[1]['visitor_team']['full_name']}" for res in enumerate(request_games_data)]
@@ -43,6 +44,8 @@ def check_matchup(choice, request_games_data):
     while True:
         try:
             matchup_data = request_games_data[choice-1]
+            # print("'========'")
+            # print(matchup_data)
 
             home_team_name = matchup_data["home_team"]["full_name"]
             home_team_score = matchup_data["home_team_score"]
@@ -74,6 +77,8 @@ def check_matchup(choice, request_games_data):
                 matchup_details['team_win'] = visitor_team_id
             
             json_matchup_details = json.dumps(matchup_details)
+            # print("=======")
+            # print(json_matchup_details)
             return json_matchup_details
 
         except IndexError:
@@ -103,7 +108,31 @@ def check_team_stats(json_matchup_details):
     # print(df_stats_result)
 
     teams = pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
+    teams_to_db = teams.copy()
 
+    teams_to_db.columns = teams_to_db.columns.str.replace(".","_")
+    # teams_to_db.set_index('id', inplace=True)
+
+    # print("=======")
+    print(teams_to_db.columns)
+    save_to_all_stats_list = ['id','min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'stl', 'blk', 'turnover', 'pf', 'pts', 'player_id', 'game_id']
+    save_to_all_players_list = ['player_id', 'player_first_name', 'player_last_name','player_position', 'player_height', 'player_weight','player_jersey_number', 'player_college', 'player_country','player_draft_year', 'player_draft_round', 'player_draft_number','player_team_id']
+    save_to_all_games_list = ['game_id', 'game_date', 'game_season', 'game_status', 'game_period','game_time', 'game_postseason', 'game_home_team_score','game_visitor_team_score', 'game_home_team_id', 'game_visitor_team_id']
+    save_to_all_teams_list = ['team_id', 'team_conference', 'team_division','team_city', 'team_name', 'team_full_name', 'team_abbreviation']
+
+    print(teams_to_db[save_to_all_players_list])
+    try:
+        insert_to_all_games(teams_to_db[save_to_all_games_list])
+    except:
+        print("nocontinue")
+    try:
+        insert_to_all_players(teams_to_db[save_to_all_players_list])
+    except:
+        print("err")
+    try:
+        insert_to_all_stats(teams_to_db[save_to_all_stats_list])
+    except:
+        print("or")
     # For DB ------------------------------
     # print("------------------------------")
     # print(teams[["player.height"]])
