@@ -114,7 +114,7 @@ def check_team_stats(json_matchup_details):
     # teams_to_db.set_index('id', inplace=True)
 
     # print("=======")
-    print(teams_to_db.columns)
+    # print(teams_to_db.columns)
     save_to_all_stats_list = ['id','min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'stl', 'blk', 'turnover', 'pf', 'pts', 'player_id', 'game_id']
     save_to_all_players_list = ['player_id', 'player_first_name', 'player_last_name','player_position', 'player_height', 'player_weight','player_jersey_number', 'player_college', 'player_country','player_draft_year', 'player_draft_round', 'player_draft_number','player_team_id']
     save_to_all_games_list = ['game_id', 'game_date', 'game_season', 'game_status', 'game_period','game_time', 'game_postseason', 'game_home_team_score','game_visitor_team_score', 'game_home_team_id', 'game_visitor_team_id']

@@ -2,11 +2,7 @@ import psycopg2 as pg
 import pandas as pd 
 from sqlalchemy import create_engine, exc
 
-pg_conn = pg.connect(database = "bballtf", 
-                        user = "postgres", 
-                        host= 'localhost',
-                        password = "postgres",
-                        port = 5432)
+
 sql_connection = 'postgresql://postgres:postgres@localhost:5432/bballtf'
 db_conn = create_engine(sql_connection)
 # conn = db_conn.connect()
@@ -72,6 +68,11 @@ def insert_to_all_teams(all_teams_list):
 
 
 def update_table(table_name, list_of_cols, list_of_values):
+    pg_conn = pg.connect(database = "bballtf", 
+                        user = "postgres", 
+                        host= 'localhost',
+                        password = "postgres",
+                        port = 5432)
     update_set = ",".join([f"{col} = '{val}'" for col,val in zip(list_of_cols[1:],list_of_values[1:])])
 
     sql_statement = f"""
