@@ -137,6 +137,7 @@ def check_team_stats(json_matchup_details):
     # print("------------------------------")
     # print(teams[["player.height"]])
     # teams.to_csv("teams_stats_return.csv", index=False)
+    insert_to_all_teams(teams_to_db[save_to_all_teams_list])
 
     df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]
     df_home_team = df_home_team.copy()

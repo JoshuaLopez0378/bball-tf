@@ -53,8 +53,8 @@ cur.execute("""
 cur.execute("""
             CREATE TABLE IF NOT EXISTS all_teams(
                 team_id VARCHAR(16) PRIMARY KEY,
-                conference VARCHAR(8),
-                division VARCHAR(8),
+                conference VARCHAR(16),
+                division VARCHAR(16),
                 city VARCHAR(16),
                 name VARCHAR(24),
                 full_name VARCHAR(32),
