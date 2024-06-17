@@ -120,23 +120,23 @@ def check_team_stats(json_matchup_details):
     save_to_all_games_list = ['game_id', 'game_date', 'game_season', 'game_status', 'game_period','game_time', 'game_postseason', 'game_home_team_score','game_visitor_team_score', 'game_home_team_id', 'game_visitor_team_id']
     save_to_all_teams_list = ['team_id', 'team_conference', 'team_division','team_city', 'team_name', 'team_full_name', 'team_abbreviation']
 
-    print(teams_to_db[save_to_all_players_list])
-    try:
-        insert_to_all_games(teams_to_db[save_to_all_games_list])
-    except:
-        print("nocontinue")
-    try:
-        insert_to_all_players(teams_to_db[save_to_all_players_list])
-    except:
-        print("err")
-    try:
-        insert_to_all_stats(teams_to_db[save_to_all_stats_list])
-    except:
-        print("or")
+    # print(teams_to_db[save_to_all_players_list])
+    # try:
+    insert_to_all_games(teams_to_db[save_to_all_games_list])
+    # except:
+        # print("nocontinue")
+    # try:
+    insert_to_all_players(teams_to_db[save_to_all_players_list])
+    # except:
+    #     print("err")
+    # try:
+    insert_to_all_stats(teams_to_db[save_to_all_stats_list])
+    # except:
+    #     print("or")
     # For DB ------------------------------
     # print("------------------------------")
     # print(teams[["player.height"]])
-    teams.to_csv("teams_stats_return.csv", index=False)
+    # teams.to_csv("teams_stats_return.csv", index=False)
 
     df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]
     df_home_team = df_home_team.copy()
