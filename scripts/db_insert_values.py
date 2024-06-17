@@ -33,10 +33,17 @@ def insert_to_all_games(all_games_list):
     orig_games_col = list(all_games_list.columns)
     renamed_games_col = dict(zip(orig_games_col[1:], ("_".join(col.split("_")[1:]) for col in orig_games_col[1:])))
     all_games_list.rename(columns = renamed_games_col, inplace = True)
+    
     games_record = all_games_list.head(1)
+    data_type_list = ['string', 'string', 'int', 'string', 'int', 'string', 'bool', 'int', 'int', 'string', 'string']
+    games_record = games_record.astype(dict(zip(games_record.columns,data_type_list)))
+
+    print("dtypes")
+    print(games_record.dtypes)
+    print(games_record)
+
 
     sql_connection = 'postgresql://postgres:postgres@localhost:5432/bballtf'
-
     db_conn = create_engine(sql_connection)
     conn = db_conn.connect()
 
@@ -57,12 +64,12 @@ def insert_to_all_teams():
 
 
 def update_table(table_name, list_of_cols, list_of_values):
-    update_set = ",\n".join([f"{col} = {val}" for col,val in zip(list_of_cols[1:],list_of_values[1:])])
+    update_set = ",\n".join([f"{col} = '{val}'" for col,val in zip(list_of_cols[1:],list_of_values[1:])])
 
     sql_statement = f"""
         UPDATE {table_name}
         SET {update_set}
-        WHERE {list_of_cols[0]} = {str(list_of_values[0])};
+        WHERE {list_of_cols[0]} = {str(list_of_values[0])}::VARCHAR(16);
     """
 
     print(sql_statement)
@@ -72,3 +79,5 @@ def update_table(table_name, list_of_cols, list_of_values):
     pg_conn.commit()
     cur.close()
     pg_conn.close()
+
+    print("=== DONE UPDATING ===")
