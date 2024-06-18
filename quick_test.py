@@ -1,12 +1,13 @@
-list_of_cols = ['test1', 'test3', 'test5']
-list_of_values = ['val1', 'val2', 'val3']
-update_set = ",\n".join([f"{col} = {val}" for col,val in zip(list_of_cols,list_of_values)])
-table_name = 'toinks'
+import yaml
+with open('scripts/schemas/main_tables_all_schema.yaml', 'r') as file:
+    test_read = yaml.safe_load(file)
 
-x = f"""
-        UPDATE {table_name}
-        SET {update_set}
-        WHERE {list_of_cols[0]} = {list_of_values[0]}
-"""
+# print(test_read)
+# print(test_read["all_players"])
+for i in test_read['all_players']['dtypes_df']:
+    print(f" {i} | {test_read['all_players']['dtypes_df'][i]}")
 
+
+
+x = dict(zip([col for col in test_read['all_players']['dtypes_df']], [test_read['all_players']['dtypes_df'][col] for col in test_read['all_players']['dtypes_df']]))
 print(x)

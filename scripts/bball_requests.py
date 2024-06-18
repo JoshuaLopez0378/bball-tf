@@ -119,6 +119,7 @@ def check_team_stats(json_matchup_details):
     save_to_all_players_list = ['player_id', 'player_first_name', 'player_last_name','player_position', 'player_height', 'player_weight','player_jersey_number', 'player_college', 'player_country','player_draft_year', 'player_draft_round', 'player_draft_number','player_team_id']
     save_to_all_games_list = ['game_id', 'game_date', 'game_season', 'game_status', 'game_period','game_time', 'game_postseason', 'game_home_team_score','game_visitor_team_score', 'game_home_team_id', 'game_visitor_team_id']
     save_to_all_teams_list = ['team_id', 'team_conference', 'team_division','team_city', 'team_name', 'team_full_name', 'team_abbreviation']
+    # teams.to_csv("teams_stats_return.csv", index=False)
 
     # print(teams_to_db[save_to_all_players_list])
     # try:
@@ -136,7 +137,6 @@ def check_team_stats(json_matchup_details):
     # For DB ------------------------------
     # print("------------------------------")
     # print(teams[["player.height"]])
-    # teams.to_csv("teams_stats_return.csv", index=False)
     insert_to_all_teams(teams_to_db[save_to_all_teams_list])
 
     df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]

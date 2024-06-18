@@ -1,6 +1,12 @@
 import psycopg2 as pg
 import pandas as pd 
 from sqlalchemy import create_engine, exc
+import yaml
+import os
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+with open(f'{current_dir}/schemas/main_tables_all_schema.yaml', 'r') as file:
+    all_schema = yaml.safe_load(file)
 
 
 sql_connection = 'postgresql://postgres:postgres@localhost:5432/bballtf'
@@ -8,14 +14,23 @@ db_conn = create_engine(sql_connection)
 # conn = db_conn.connect()
 
 
-def insert_to_all_stats(all_stats_list):
-    all_stats_list.to_sql('all_stats', con=db_conn, if_exists='append', index=False)
 
+def insert_to_all_stats(all_stats_list):
+    try:
+        all_stats_list.to_sql('all_stats', con=db_conn, if_exists='append', index=False)
+    except:
+        print("stats already loaded")
+        return "stats already loaded"
 
 def insert_to_all_players(all_players_list):
     orig_players_col = list(all_players_list.columns)
     renamed_players_col = dict(zip(orig_players_col[1:], ("_".join(col.split("_")[1:]) for col in orig_players_col[1:])))
     all_players_list.rename(columns = renamed_players_col, inplace = True)
+
+    astypes = dict(zip([col for col in all_schema['all_players']['dtypes_df']], 
+                       [all_schema['all_players']['dtypes_df'][col] for col in all_schema['all_players']['dtypes_df']]))
+
+    all_players_list = all_players_list.fillna(0).astype(astypes)
 
     try:
         all_players_list.to_sql('all_players', con=db_conn, if_exists='append', index=False)
@@ -57,6 +72,12 @@ def insert_to_all_teams(all_teams_list):
     renamed_teams_col = dict(zip(orig_teams_col[1:], ("_".join(col.split("_")[1:]) for col in orig_teams_col[1:])))
     all_teams_list.rename(columns = renamed_teams_col, inplace = True)
     all_teams_list.drop_duplicates(inplace=True)
+
+    astypes = dict(zip([col for col in all_schema['all_teams']['dtypes_df']], 
+                       [all_schema['all_teams']['dtypes_df'][col] for col in all_schema['all_teams']['dtypes_df']]))
+
+    all_teams_list = all_teams_list.fillna(0).astype(astypes)
+
     try:
         all_teams_list.to_sql('all_teams', con=db_conn, if_exists='append', index=False)
     except exc.IntegrityError :
@@ -80,6 +101,8 @@ def update_table(table_name, list_of_cols, list_of_values):
         SET {update_set}
         WHERE {list_of_cols[0]} = {str(list_of_values[0])}::VARCHAR(16);
     """
+    print("=== sql statement ===")
+    print(sql_statement)
     cur = pg_conn.cursor()
     cur.execute(sql_statement)
 
