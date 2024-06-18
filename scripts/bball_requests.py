@@ -121,23 +121,12 @@ def check_team_stats(json_matchup_details):
     save_to_all_teams_list = ['team_id', 'team_conference', 'team_division','team_city', 'team_name', 'team_full_name', 'team_abbreviation']
     # teams.to_csv("teams_stats_return.csv", index=False)
 
-    # print(teams_to_db[save_to_all_players_list])
-    # try:
+
     insert_to_all_games(teams_to_db[save_to_all_games_list])
-    # except:
-        # print("nocontinue")
-    # try:
     insert_to_all_players(teams_to_db[save_to_all_players_list])
-    # except:
-    #     print("err")
-    # try:
-    insert_to_all_stats(teams_to_db[save_to_all_stats_list])
-    # except:
-    #     print("or")
-    # For DB ------------------------------
-    # print("------------------------------")
-    # print(teams[["player.height"]])
     insert_to_all_teams(teams_to_db[save_to_all_teams_list])
+    insert_to_all_stats(teams_to_db[save_to_all_stats_list])
+
 
     df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]
     df_home_team = df_home_team.copy()
