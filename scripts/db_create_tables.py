@@ -45,8 +45,8 @@ cur.execute("""
                 postseason BOOL,
                 home_team_score INTEGER,
                 visitor_team_score INTEGER,
-                home_team_id VARCHAR(16),
-                visitor_team_id VARCHAR(16)
+                home_team_id VARCHAR(16) REFERENCES all_teams(team_id),
+                visitor_team_id VARCHAR(16) REFERENCES all_teams(team_id)
             );
             """)
 

@@ -51,6 +51,7 @@ def insert_to_all_games(all_games_list):
     # Commented code snippet for astype, since workaround for data types was to put ''
     # when doing dictionary comprehension <- since sql also accepts values with ''
     # for any data type
+    # UPDATE: astype applied only to teams and players tables for now
     # ===
     # data_type_list = ['string', 'string', 'int', 'string', 'int', 'string', 'bool', 'int', 'int', 'string', 'string']
     # games_record = games_record.astype(dict(zip(games_record.columns,data_type_list)))
