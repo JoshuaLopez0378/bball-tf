@@ -9,12 +9,12 @@ conn = pg.connect(database = "bballtf",
 cur = conn.cursor()
 # Execute a command
 
-cur.execute("""
-    DROP TABLE IF EXISTS all_players CASCADE;
-    DROP TABLE IF EXISTS all_teams CASCADE;
-    DROP TABLE IF EXISTS all_games CASCADE;
-    DROP TABLE IF EXISTS all_stats CASCADE;        
-""")
+# cur.execute("""
+#     DROP TABLE IF EXISTS all_players CASCADE;
+#     DROP TABLE IF EXISTS all_teams CASCADE;
+#     DROP TABLE IF EXISTS all_games CASCADE;
+#     DROP TABLE IF EXISTS all_stats CASCADE;        
+# """)
 
 cur.execute("""
             CREATE TABLE IF NOT EXISTS all_players(
@@ -88,6 +88,29 @@ cur.execute("""
                 game_id VARCHAR(16) REFERENCES all_games(game_id)
             );
             """)
+
+cur.execute("""
+            CREATE TABLE IF NOT EXISTS user_stats(
+                user_id VARCHAR(16) PRIMARY KEY,
+                num_of_guesses INTEGER,
+                wins INTEGER,
+                win_pct FLOAT
+            );
+            """)
+
+cur.execute("""
+            CREATE TABLE IF NOT EXISTS user_games(
+                user_game_id VARCHAR(16) PRIMARY KEY,
+                user_team_win_lose VARCHAR(8),
+                team_id_choice VARCHAR(16),
+                team_id_opponent VARCHAR(16),
+                is_choice_home BOOL,
+                game_id VARCHAR(16) REFERENCES all_games(game_id),
+                user_id VARCHAR(16) REFERENCES user_stats(user_id)
+            );
+            """)
+
+
 # Make the changes to the database persistent
 conn.commit()
 # Close cursor and communication with the database

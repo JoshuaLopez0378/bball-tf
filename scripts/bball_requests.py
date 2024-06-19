@@ -91,7 +91,6 @@ def check_matchup(choice, request_games_data):
 
 def check_team_stats(json_matchup_details):
     loaded_matchup_details = json.loads(json_matchup_details)
-
     # # STATS
     today_game_id = loaded_matchup_details['game_id']
     game_id_url_param = f'?game_ids[]={today_game_id}'
@@ -109,7 +108,6 @@ def check_team_stats(json_matchup_details):
 
     teams = pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
     teams_to_db = teams.copy()
-
     teams_to_db.columns = teams_to_db.columns.str.replace(".","_")
     # teams_to_db.set_index('id', inplace=True)
 
@@ -120,11 +118,9 @@ def check_team_stats(json_matchup_details):
     save_to_all_games_list = ['game_id', 'game_date', 'game_season', 'game_status', 'game_period','game_time', 'game_postseason', 'game_home_team_score','game_visitor_team_score', 'game_home_team_id', 'game_visitor_team_id']
     save_to_all_teams_list = ['team_id', 'team_conference', 'team_division','team_city', 'team_name', 'team_full_name', 'team_abbreviation']
     # teams.to_csv("teams_stats_return.csv", index=False)
-
-
-    insert_to_all_games(teams_to_db[save_to_all_games_list])
     insert_to_all_players(teams_to_db[save_to_all_players_list])
     insert_to_all_teams(teams_to_db[save_to_all_teams_list])
+    insert_to_all_games(teams_to_db[save_to_all_games_list])
     insert_to_all_stats(teams_to_db[save_to_all_stats_list])
 
 

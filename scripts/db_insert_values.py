@@ -19,7 +19,7 @@ def insert_to_all_stats(all_stats_list):
     try:
         all_stats_list.to_sql('all_stats', con=db_conn, if_exists='append', index=False)
     except:
-        print("stats already loaded")
+        print("=== Stats already loaded ===")
         return "stats already loaded"
 
 def insert_to_all_players(all_players_list):
@@ -102,8 +102,8 @@ def update_table(table_name, list_of_cols, list_of_values):
         SET {update_set}
         WHERE {list_of_cols[0]} = {str(list_of_values[0])}::VARCHAR(16);
     """
-    print("=== sql statement ===")
-    print(sql_statement)
+    # print("=== sql statement ===")
+    # print(sql_statement)
     cur = pg_conn.cursor()
     cur.execute(sql_statement)
 
@@ -111,4 +111,7 @@ def update_table(table_name, list_of_cols, list_of_values):
     cur.close()
     pg_conn.close()
 
-    print("=== DONE UPDATING ===")
+    print("=== Done updating ===")
+
+
+def insert_to_user_stats():
