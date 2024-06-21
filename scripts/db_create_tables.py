@@ -82,13 +82,14 @@ cur.execute("""
             );
             """)
 
-cur.execute("""
-            CREATE TABLE IF NOT EXISTS user_stats(
-                user_id VARCHAR(16) PRIMARY KEY,
-                num_of_guesses INTEGER,
-                wins INTEGER
-            );
-            """)
+# cur.execute("""
+#             CREATE TABLE IF NOT EXISTS user_stats(
+#                 user_id VARCHAR(16) PRIMARY KEY,
+#                 uname VARCHAR(16),
+#                 num_of_guesses INTEGER,
+#                 wins INTEGER
+#             );
+#             """)
 
 cur.execute("""
             CREATE TABLE IF NOT EXISTS user_games(
@@ -97,8 +98,7 @@ cur.execute("""
                 team_id_choice VARCHAR(16),
                 team_id_opponent VARCHAR(16),
                 is_choice_home BOOL,
-                game_id VARCHAR(16) REFERENCES all_games(game_id),
-                user_id VARCHAR(16) REFERENCES user_stats(user_id)
+                game_id VARCHAR(16) REFERENCES all_games(game_id)
             );
             """)
 
