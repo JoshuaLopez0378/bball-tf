@@ -79,6 +79,7 @@ def check_matchup(choice, request_games_data):
             json_matchup_details = json.dumps(matchup_details)
             # print("=======")
             # print(json_matchup_details)
+
             return json_matchup_details
 
         except IndexError:

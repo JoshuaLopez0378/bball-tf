@@ -114,4 +114,5 @@ def update_table(table_name, list_of_cols, list_of_values):
     print("=== Done updating ===")
 
 
-def insert_to_user_stats():
+# def insert_to_user_stats():
+    

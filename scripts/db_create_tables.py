@@ -86,8 +86,7 @@ cur.execute("""
             CREATE TABLE IF NOT EXISTS user_stats(
                 user_id VARCHAR(16) PRIMARY KEY,
                 num_of_guesses INTEGER,
-                wins INTEGER,
-                win_pct FLOAT
+                wins INTEGER
             );
             """)
 
@@ -104,7 +103,7 @@ cur.execute("""
             """)
 
 
-# Make the changes to the database persistent
+# Make the changes to the database persistent``
 conn.commit()
 # Close cursor and communication with the database
 cur.close()
