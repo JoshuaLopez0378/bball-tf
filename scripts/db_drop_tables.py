@@ -15,3 +15,9 @@ cur.execute("""
     DROP TABLE IF EXISTS all_stats CASCADE;      
     DROP TABLE IF EXISTS user_games;        
 """)
+
+# Make the changes to the database persistent``
+conn.commit()
+# Close cursor and communication with the database
+cur.close()
+conn.close()
