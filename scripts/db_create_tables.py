@@ -94,7 +94,7 @@ cur.execute("""
 
 cur.execute("""
             CREATE TABLE IF NOT EXISTS user_games(
-                user_game_id VARCHAR(16) PRIMARY KEY,
+                user_game_id SERIAL PRIMARY KEY,
                 team_id_choice VARCHAR(16),
                 team_id_opponent VARCHAR(16),
                 is_choice_win BOOL,

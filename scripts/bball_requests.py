@@ -5,7 +5,7 @@ import numpy as np
 import json
 from scripts.extra_functions.formatter import use_prime_position
 from scripts.constants import API_KEY, games_url, stats_url
-from scripts.db_insert_values import insert_to_all_stats, insert_to_all_players, insert_to_all_games, insert_to_all_teams
+from scripts.db_insert_values import insert_to_all_stats, insert_to_all_players, insert_to_all_games, insert_to_all_teams, insert_to_user_stats
 
 headers = {
     "accept":"application/json",
@@ -122,20 +122,31 @@ def check_matchup(choice, request_games_data):
             print("=== return choice ===")
             # user_game_id (increment)
             # team_id_choice
+            user_team = list(user_team.values())[0]
             print(user_team)
             # team_id_opponent
+            opp_team = list(opp_team.values())[0]
             print(opp_team)
             # is_choice_win
-            is_choice_win = True if matchup_details['team_win'] == list(user_team.values())[0] else False
+            is_choice_win = True if matchup_details['team_win'] == user_team else False
             print(is_choice_win)
             # is_choice_home
-            is_choice_home = True if matchup_details['home']['team_id'] == list(user_team.values())[0] else False
+            is_choice_home = True if matchup_details['home']['team_id'] == opp_team else False
             print(is_choice_home)
             # game_id
             print(matchup_details['game_id'])
 
+            user_game_details = {
+                "team_id_choice" : user_team,
+                "team_id_opponent" : opp_team,
+                "is_choice_win" : is_choice_win,
+                "is_choice_home" : is_choice_home,
+                "game_id" : matchup_details["game_id"]
+            }
 
-            return json_matchup_details
+            # json_user_game_details = json.dumps(user_game_details)
+
+            return json_matchup_details, user_game_details
 
         except IndexError:
             print("Choice not exist")
@@ -234,3 +245,6 @@ def check_winner_position(compare_list):
     df_win = df_home.where(df_home["pts"] > df_visitor["pts"], df_visitor)
     
     return df_win
+
+def record_user_game(user_game_details):
+    insert_to_user_stats(user_game_details)

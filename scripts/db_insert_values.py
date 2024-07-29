@@ -117,5 +117,9 @@ def update_table(table_name, list_of_cols, list_of_values):
     print(f"=== Done updating {table_name} | {list_of_values[0]} ===")
 
 
-# def insert_to_user_stats():
-    
+def insert_to_user_stats(user_game_details):
+    print("==== insert to user stats ====")
+    print(user_game_details)
+    pd_user_game_details = pd.DataFrame(user_game_details, index=[0])
+    print(pd_user_game_details)
+    pd_user_game_details.to_sql('user_games', con=db_conn, if_exists='append', index=False)
