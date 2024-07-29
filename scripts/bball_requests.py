@@ -131,7 +131,7 @@ def check_matchup(choice, request_games_data):
             is_choice_win = True if matchup_details['team_win'] == user_team else False
             print(is_choice_win)
             # is_choice_home
-            is_choice_home = True if matchup_details['home']['team_id'] == opp_team else False
+            is_choice_home = True if matchup_details['home']['team_id'] == user_team else False
             print(is_choice_home)
             # game_id
             print(matchup_details['game_id'])
