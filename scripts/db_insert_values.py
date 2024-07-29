@@ -26,6 +26,9 @@ def insert_to_all_players(all_players_list):
     orig_players_col = list(all_players_list.columns)
     renamed_players_col = dict(zip(orig_players_col[1:], ("_".join(col.split("_")[1:]) for col in orig_players_col[1:])))
     all_players_list.rename(columns = renamed_players_col, inplace = True)
+    all_players_list = all_players_list.replace("'","''", regex=True)
+
+    print(all_players_list)
 
     astypes = dict(zip([col for col in all_schema['all_players']['dtypes_df']], 
                        [all_schema['all_players']['dtypes_df'][col] for col in all_schema['all_players']['dtypes_df']]))

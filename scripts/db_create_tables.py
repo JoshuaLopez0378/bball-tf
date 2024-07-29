@@ -27,6 +27,19 @@ cur.execute("""
             );
             """)
 
+
+cur.execute("""
+            CREATE TABLE IF NOT EXISTS all_teams(
+                team_id VARCHAR(16) PRIMARY KEY,
+                conference VARCHAR(16),
+                division VARCHAR(16),
+                city VARCHAR(16),
+                name VARCHAR(24),
+                full_name VARCHAR(32),
+                abbreviation VARCHAR(8)
+            );
+            """)
+
 cur.execute("""
             CREATE TABLE IF NOT EXISTS all_games(
                 game_id VARCHAR(16) PRIMARY KEY,
@@ -40,18 +53,6 @@ cur.execute("""
                 visitor_team_score INTEGER,
                 home_team_id VARCHAR(16) REFERENCES all_teams(team_id),
                 visitor_team_id VARCHAR(16) REFERENCES all_teams(team_id)
-            );
-            """)
-
-cur.execute("""
-            CREATE TABLE IF NOT EXISTS all_teams(
-                team_id VARCHAR(16) PRIMARY KEY,
-                conference VARCHAR(16),
-                division VARCHAR(16),
-                city VARCHAR(16),
-                name VARCHAR(24),
-                full_name VARCHAR(32),
-                abbreviation VARCHAR(8)
             );
             """)
 

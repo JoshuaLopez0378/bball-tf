@@ -110,7 +110,6 @@ def check_matchup(choice, request_games_data):
                 matchup_details['team_win'] = visitor_team_id
             
             print("here")
-            print(matchup_details)
             json_matchup_details = json.dumps(matchup_details)
             print(json_matchup_details)
             print("here2")
