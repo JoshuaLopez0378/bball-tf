@@ -12,7 +12,7 @@ headers = {
     "Authorization":API_KEY
 }
 
-def date_yesterday(days=99): # Ideal 2024-04-24
+def date_yesterday(days=97): # Ideal 2024-04-24
     now = datetime.today()
     yester_date = now - timedelta(days=days)
     string_date = yester_date.strftime('%Y-%m-%d')
@@ -65,7 +65,7 @@ def check_matchup(choice, request_games_data):
                 }
             }
 
-            teams = [matchup_details["home"]["team_name"], matchup_details["visitor"]["team_name"]]
+            teams = [{matchup_details["home"]["team_name"] : matchup_details["home"]["team_id"]}, {matchup_details["visitor"]["team_name"]:matchup_details["visitor"]["team_id"]}]
 
             print("=== teams ===")
             print(teams)
@@ -118,6 +118,22 @@ def check_matchup(choice, request_games_data):
 
             # print(user_games_details)
             # input("ok")
+
+            print("=== return choice ===")
+            # user_game_id (increment)
+            # team_id_choice
+            print(user_team)
+            # team_id_opponent
+            print(opp_team)
+            # is_choice_win
+            is_choice_win = True if matchup_details['team_win'] == list(user_team.values())[0] else False
+            print(is_choice_win)
+            # is_choice_home
+            is_choice_home = True if matchup_details['home']['team_id'] == list(user_team.values())[0] else False
+            print(is_choice_home)
+            # game_id
+            print(matchup_details['game_id'])
+
 
             return json_matchup_details
 
