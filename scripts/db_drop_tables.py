@@ -12,5 +12,6 @@ cur.execute("""
     DROP TABLE IF EXISTS all_players CASCADE;
     DROP TABLE IF EXISTS all_teams CASCADE;
     DROP TABLE IF EXISTS all_games CASCADE;
-    DROP TABLE IF EXISTS all_stats CASCADE;        
+    DROP TABLE IF EXISTS all_stats CASCADE;      
+    DROP TABLE IF EXISTS user_games;        
 """)
