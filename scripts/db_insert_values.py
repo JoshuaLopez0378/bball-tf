@@ -111,7 +111,7 @@ def update_table(table_name, list_of_cols, list_of_values):
     cur.close()
     pg_conn.close()
 
-    print("=== Done updating ===")
+    print(f"=== Done updating {table_name} | {list_of_values[0]} ===")
 
 
 # def insert_to_user_stats():

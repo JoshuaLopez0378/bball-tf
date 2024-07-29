@@ -12,8 +12,12 @@ for game in all_games_list:
     print(game)
 # """
 choice = int(input("Choice: "))
-
+print('here3')
+print("=== request games data ===")
+print(request_games_data)
 json_matchup_details = check_matchup(choice, request_games_data)
+print("=== in MAIN, json matchup details ===")
+print(json_matchup_details)
 json_matchup_details_load = json.loads(json_matchup_details)
 
 team_ids = {"home": json_matchup_details_load["home"]["team_id"], "visitor": json_matchup_details_load["visitor"]["team_id"]}

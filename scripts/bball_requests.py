@@ -12,7 +12,7 @@ headers = {
     "Authorization":API_KEY
 }
 
-def date_yesterday(days=37): # Ideal 2024-04-24
+def date_yesterday(days=99): # Ideal 2024-04-24
     now = datetime.today()
     yester_date = now - timedelta(days=days)
     string_date = yester_date.strftime('%Y-%m-%d')
@@ -43,42 +43,82 @@ def check_games(date_yesterday):
 def check_matchup(choice, request_games_data):
     while True:
         try:
+            print("=== matchup data ===")
+            print(request_games_data[choice-1])
             matchup_data = request_games_data[choice-1]
-            # print("'========'")
-            # print(matchup_data)
-
             home_team_name = matchup_data["home_team"]["full_name"]
-            home_team_score = matchup_data["home_team_score"]
             home_team_id = matchup_data["home_team"]["id"]
-            # print(f"HOME: {home_team_name}: {home_team_score} | (id:{home_team_id})") ------------------------------
 
             visitor_team_name = matchup_data["visitor_team"]["full_name"]
-            visitor_team_score = matchup_data["visitor_team_score"]
             visitor_team_id = matchup_data["visitor_team"]["id"]
-            # print(f"AWAY: {visitor_team_name}: {visitor_team_score} | (id:{visitor_team_id})") ------------------------------
 
+            
             matchup_details = {
                 "game_id": matchup_data['id'],
                 "home": {
                     "team_name": home_team_name,
-                    "team_score": home_team_score,
                     "team_id": home_team_id
                 },
                 "visitor": {
                     "team_name": visitor_team_name,
-                    "team_score": visitor_team_score,
                     "team_id": visitor_team_id
                 }
             }
+
+            teams = [matchup_details["home"]["team_name"], matchup_details["visitor"]["team_name"]]
+
+            print("=== teams ===")
+            print(teams)
+
+            print("Choose team, enter ID")
+            print([f"[{res[0] + 1}] {res[1]}" for res in enumerate(teams)])
+            choice_team = int(input("Choice: "))
+            user_team = teams[choice_team-1]
+            teams.remove(user_team)
+            opp_team = teams[0]
+            del teams
+
+            print(f"Choice: {user_team} ||| Opp: {opp_team}")
+            # input("OK")
+            # print("'========'")
+            # print(matchup_data)
+
+
+            home_team_score = matchup_data["home_team_score"]
+            visitor_team_score = matchup_data["visitor_team_score"]
+
+            matchup_details["home"]["home_team_score"] = home_team_score
+            matchup_details["visitor"]["visitor_team_score"] = visitor_team_score
+
+            # matchup_details = {
+            #     "game_id": matchup_data['id'],
+            #     "home": {
+            #         "team_name": home_team_name,
+            #         "team_score": home_team_score,
+            #         "team_id": home_team_id
+            #     },
+            #     "visitor": {
+            #         "team_name": visitor_team_name,
+            #         "team_score": visitor_team_score,
+            #         "team_id": visitor_team_id
+            #     }
+            # }
 
             if home_team_score > visitor_team_score:
                 matchup_details['team_win'] = home_team_id
             else:
                 matchup_details['team_win'] = visitor_team_id
             
+            print("here")
+            print(matchup_details)
             json_matchup_details = json.dumps(matchup_details)
+            print(json_matchup_details)
+            print("here2")
             # print("=======")
             # print(json_matchup_details)
+
+            # print(user_games_details)
+            # input("ok")
 
             return json_matchup_details
 
