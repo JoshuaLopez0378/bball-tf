@@ -1,0 +1,25 @@
+all_players:
+  dtypes_df:
+    player_id: "object"
+    first_name: "object"
+    last_name: "object"
+    position: "object"
+    height: "object"
+    weight: "Int64"
+    jersey_number: "object"
+    college: "object"
+    country: "object"
+    draft_year: "Int64"
+    draft_round: "Int64"
+    draft_number: "Int64"
+    team_id: "object"
+
+all_teams:
+  dtypes_df:
+    team_id: "object"
+    conference: "object"
+    division: "object"
+    city: "object"
+    name: "object"
+    full_name: "object"
+    abbreviation: "object"

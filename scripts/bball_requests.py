@@ -5,13 +5,14 @@ import numpy as np
 import json
 from scripts.extra_functions.formatter import use_prime_position
 from scripts.constants import API_KEY, games_url, stats_url
+from scripts.db_insert_values import insert_to_all_stats, insert_to_all_players, insert_to_all_games, insert_to_all_teams, insert_to_user_stats
 
 headers = {
     "accept":"application/json",
     "Authorization":API_KEY
 }
 
-def date_yesterday(days=1):
+def date_yesterday(days=97): # Ideal 2024-04-24
     now = datetime.today()
     yester_date = now - timedelta(days=days)
     string_date = yester_date.strftime('%Y-%m-%d')
@@ -24,9 +25,13 @@ def check_games(date_yesterday):
 
     # Perform get request and take result
     request_games = requests.get(url=f"{games_url}{today_date_url_param}", headers=headers)
-    print("=== ALL GAMES RESULT ===")
+    # print("=== ALL GAMES RESULT ===") ------------------------------
     request_games_result = request_games.json()
     request_games_data = request_games_result["data"]
+
+    # For DB ------------------------------
+    # print("------------------------------")
+    # print(request_games_data)
 
     # List all games, "home vs away" format
     all_games_list = [f"{res[0] + 1} | {res[1]['home_team']['full_name']} VS {res[1]['visitor_team']['full_name']}" for res in enumerate(request_games_data)]
@@ -38,47 +43,121 @@ def check_games(date_yesterday):
 def check_matchup(choice, request_games_data):
     while True:
         try:
+            print("=== matchup data ===")
+            print(request_games_data[choice-1])
             matchup_data = request_games_data[choice-1]
-
             home_team_name = matchup_data["home_team"]["full_name"]
-            home_team_score = matchup_data["home_team_score"]
             home_team_id = matchup_data["home_team"]["id"]
-            print(f"HOME: {home_team_name}: {home_team_score} | (id:{home_team_id})")
 
             visitor_team_name = matchup_data["visitor_team"]["full_name"]
-            visitor_team_score = matchup_data["visitor_team_score"]
             visitor_team_id = matchup_data["visitor_team"]["id"]
-            print(f"AWAY: {visitor_team_name}: {visitor_team_score} | (id:{visitor_team_id})")
 
+            
             matchup_details = {
                 "game_id": matchup_data['id'],
                 "home": {
                     "team_name": home_team_name,
-                    "team_score": home_team_score,
                     "team_id": home_team_id
                 },
                 "visitor": {
                     "team_name": visitor_team_name,
-                    "team_score": visitor_team_score,
                     "team_id": visitor_team_id
                 }
             }
+
+            teams = [{matchup_details["home"]["team_name"] : matchup_details["home"]["team_id"]}, {matchup_details["visitor"]["team_name"]:matchup_details["visitor"]["team_id"]}]
+
+            print("=== teams ===")
+            print(teams)
+
+            print("Choose team, enter ID")
+            print([f"[{res[0] + 1}] {res[1]}" for res in enumerate(teams)])
+            choice_team = int(input("Choice: "))
+            user_team = teams[choice_team-1]
+            teams.remove(user_team)
+            opp_team = teams[0]
+            del teams
+
+            print(f"Choice: {user_team} ||| Opp: {opp_team}")
+            # input("OK")
+            # print("'========'")
+            # print(matchup_data)
+
+
+            home_team_score = matchup_data["home_team_score"]
+            visitor_team_score = matchup_data["visitor_team_score"]
+
+            matchup_details["home"]["home_team_score"] = home_team_score
+            matchup_details["visitor"]["visitor_team_score"] = visitor_team_score
+
+            # matchup_details = {
+            #     "game_id": matchup_data['id'],
+            #     "home": {
+            #         "team_name": home_team_name,
+            #         "team_score": home_team_score,
+            #         "team_id": home_team_id
+            #     },
+            #     "visitor": {
+            #         "team_name": visitor_team_name,
+            #         "team_score": visitor_team_score,
+            #         "team_id": visitor_team_id
+            #     }
+            # }
 
             if home_team_score > visitor_team_score:
                 matchup_details['team_win'] = home_team_id
             else:
                 matchup_details['team_win'] = visitor_team_id
             
+            print("here")
             json_matchup_details = json.dumps(matchup_details)
-            return json_matchup_details
+            print(json_matchup_details)
+            print("here2")
+            # print("=======")
+            # print(json_matchup_details)
+
+            # print(user_games_details)
+            # input("ok")
+
+            print("=== return choice ===")
+            # user_game_id (increment)
+            # team_id_choice
+            user_team = list(user_team.values())[0]
+            print(user_team)
+            # team_id_opponent
+            opp_team = list(opp_team.values())[0]
+            print(opp_team)
+            # is_choice_win
+            is_choice_win = True if matchup_details['team_win'] == user_team else False
+            print(is_choice_win)
+            # is_choice_home
+            is_choice_home = True if matchup_details['home']['team_id'] == user_team else False
+            print(is_choice_home)
+            # game_id
+            print(matchup_details['game_id'])
+
+            user_game_details = {
+                "team_id_choice" : user_team,
+                "team_id_opponent" : opp_team,
+                "is_choice_win" : is_choice_win,
+                "is_choice_home" : is_choice_home,
+                "game_id" : matchup_details["game_id"]
+            }
+
+            # json_user_game_details = json.dumps(user_game_details)
+
+            return json_matchup_details, user_game_details
 
         except IndexError:
             print("Choice not exist")
             return "Choice not exist"
 
+        except:
+            print("Error")
+            return "Error"
+
 def check_team_stats(json_matchup_details):
     loaded_matchup_details = json.loads(json_matchup_details)
-
     # # STATS
     today_game_id = loaded_matchup_details['game_id']
     game_id_url_param = f'?game_ids[]={today_game_id}'
@@ -95,6 +174,22 @@ def check_team_stats(json_matchup_details):
     # print(df_stats_result)
 
     teams = pd.concat([df_stats_result, df_stats_result2], ignore_index=True)
+    teams_to_db = teams.copy()
+    teams_to_db.columns = teams_to_db.columns.str.replace(".","_")
+    # teams_to_db.set_index('id', inplace=True)
+
+    # print("=======")
+    # print(teams_to_db.columns)
+    save_to_all_stats_list = ['id','min', 'fgm', 'fga', 'fg_pct', 'fg3m', 'fg3a', 'fg3_pct', 'ftm', 'fta', 'ft_pct', 'oreb', 'dreb', 'reb', 'ast', 'stl', 'blk', 'turnover', 'pf', 'pts', 'player_id', 'game_id']
+    save_to_all_players_list = ['player_id', 'player_first_name', 'player_last_name','player_position', 'player_height', 'player_weight','player_jersey_number', 'player_college', 'player_country','player_draft_year', 'player_draft_round', 'player_draft_number','player_team_id']
+    save_to_all_games_list = ['game_id', 'game_date', 'game_season', 'game_status', 'game_period','game_time', 'game_postseason', 'game_home_team_score','game_visitor_team_score', 'game_home_team_id', 'game_visitor_team_id']
+    save_to_all_teams_list = ['team_id', 'team_conference', 'team_division','team_city', 'team_name', 'team_full_name', 'team_abbreviation']
+    # teams.to_csv("teams_stats_return.csv", index=False)
+    insert_to_all_players(teams_to_db[save_to_all_players_list])
+    insert_to_all_teams(teams_to_db[save_to_all_teams_list])
+    insert_to_all_games(teams_to_db[save_to_all_games_list])
+    insert_to_all_stats(teams_to_db[save_to_all_stats_list])
+
 
     df_home_team = teams.loc[teams["team.id"] == loaded_matchup_details["home"]["team_id"]]
     df_home_team = df_home_team.copy()
@@ -115,7 +210,7 @@ def check_team_stats(json_matchup_details):
 
 def check_top_5(stats_list, team_ids=0):
     pd.set_option('display.max_colwidth', 100)
-    print("==============================================================================")
+    # print("==============================================================================") ------------------------------
     stats_list["player.position"] = stats_list["player.position"].apply(use_prime_position)
     # print(stats_list)
 
@@ -136,40 +231,6 @@ def check_top_5(stats_list, team_ids=0):
 
     home_df = pd.concat([df_center_home, df_forward_home, df_guard_home], ignore_index=True)
     visitor_df = pd.concat([df_center_visitor, df_forward_visitor, df_guard_visitor], ignore_index=True)
-
-    # print(home_df, "\n", visitor_df)
-
-    # df_stats_pg1 = pd.json_normalize(stats_result['data'],meta=['id'])
-    # df_stats_pg2 = pd.json_normalize(stats_result2['data'],meta=['id'])
-    # df_all_stats = pd.concat([df_stats_pg1, df_stats_pg2], ignore_index=True)
-
-    # df_take_cols = df_all_stats[['player.jersey_number', 'player.first_name', 'player.last_name', 'player.position', 'pts', 'team.id', 'team.full_name', 'game.id']]
-    # df_arranged = df_take_cols.sort_values(by=['team.full_name', 'player.position', 'pts'], ascending=False, ignore_index=True)
-    # df_arranged["player.position"] = df_arranged['player.position'].apply(use_prime_position)
-
-
-    # df_center_home = df_arranged.loc[(df_arranged['player.position'] == 'C') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(1)
-    # df_center_visitor = df_arranged.loc[(df_arranged['player.position'] == 'C') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(1)
-
-    # forward_count_home = forward_count_visitor = 2
-    # print("=== ===")
-    # print(df_center_home.empty)
-    # if df_center_home.empty:
-    #     forward_count_home = 3
-    # elif df_center_visitor.empty:
-    #     forward_count_visitor = 3
-
-    # df_forward_home = df_arranged.loc[(df_arranged['player.position'] == 'F') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(forward_count_home)
-    # df_forward_visitor = df_arranged.loc[(df_arranged['player.position'] == 'F') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(forward_count_visitor)
-
-    # df_guard_home = df_arranged.loc[(df_arranged['player.position'] == 'G') & (df_arranged['team.id'] == home_team_id)].sort_values(by=['pts'], ascending=False).head(2)
-    # df_guard_visitor = df_arranged.loc[(df_arranged['player.position'] == 'G') & (df_arranged['team.id'] == visitor_team_id)].sort_values(by=['pts'], ascending=False).head(2)    
-
-    # home_df = pd.concat([df_center_home, df_forward_home, df_guard_home], ignore_index=True)
-    # visitor_df = pd.concat([df_center_visitor, df_forward_visitor, df_guard_visitor], ignore_index=True)
-
-    # print(home_df, "\n", visitor_df)
-
     home_visitor_df = pd.concat([home_df,visitor_df])
 
     return home_visitor_df
@@ -184,3 +245,6 @@ def check_winner_position(compare_list):
     df_win = df_home.where(df_home["pts"] > df_visitor["pts"], df_visitor)
     
     return df_win
+
+def record_user_game(user_game_details):
+    insert_to_user_stats(user_game_details)
