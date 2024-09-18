@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NBA Game Checker</title>
+  </head>
+  <body>
+    <h1>Select an NBA Game</h1>
+    <form id="gameForm">
+      <label for="game">Choose a game:</label>
+      <select name="game_id" id="game">
+        {% for game in games %}
+        <option value="{{ game.id }}">
+          {{ game.team1 }} vs {{ game.team2 }}
+        </option>
+        {% endfor %}
+      </select>
+
+      <label for="team">Choose a team:</label>
+      <select name="team" id="team">
+        <option value="team1">Team 1</option>
+        <option value="team2">Team 2</option>
+      </select>
+
+      <button type="submit">Check Winner</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      const form = document.getElementById("gameForm");
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        fetch("/check_winner", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("result").innerText = data.result;
+          });
+      });
+    </script>
+  </body>
+</html>
