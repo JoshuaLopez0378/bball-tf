@@ -3,6 +3,8 @@ import os
 from flask import Flask
 from . import auth
 from . import db
+from . import blog
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -26,12 +28,13 @@ def create_app(test_config=None):
         pass
 
         # a simple page that says hello
-    @app.route('/')
+    @app.route('/hello')
     def hello():
         return 'Hello, World!'
 
     db.init_app(app)
     app.register_blueprint(auth.bp)
+    app.register_blueprint(blog.bp)
+    app.add_url_rule('/', endpoint='index')
 
     return app
-
