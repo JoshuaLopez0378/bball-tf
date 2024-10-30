@@ -23,7 +23,6 @@ print(json_matchup_details)
 win_team = check_winner_game(json_matchup_details)
 # node_request_game_win(win_team)
 
-# win_position = check_winner_position(compared_list)
 # node_request_player_win(win_position)
 
 record_user_game(user_game_details)
