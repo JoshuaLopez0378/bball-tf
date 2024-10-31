@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import json
 from scripts.constants import API_KEY, games_url
-from scripts.db_insert_values import insert_to_user_stats
+from scripts.db_insert_values import insert_to_user_stats, insert_to_all_games, insert_to_all_teams
 
 headers = {
     "accept":"application/json",
@@ -24,22 +24,48 @@ def check_games(date_yesterday):
 
     # Perform get request and take result
     request_games = requests.get(url=f"{games_url}{today_date_url_param}", headers=headers)
-    # print("=== ALL GAMES RESULT ===") ------------------------------
     request_games_result = request_games.json()
     request_games_data = request_games_result["data"]
 
-    # For DB ------------------------------
-    # print("------------------------------")
-    # print(request_games_data)
+    # print("-------------- DBATASBE ----------------")
+    print(request_games_data)
 
     # List all games, "home vs away" format
+
+
+    # insert_to_all_games(for_all_games_db_df)
+
     all_games_list = [f"{res[0] + 1} | {res[1]['home_team']['full_name']} VS {res[1]['visitor_team']['full_name']}" for res in enumerate(request_games_data)]
     # print(all_games_list)
 
     
+
+
     return all_games_list, request_games_data
 
 def check_matchup(choice, request_games_data):
+    for_all_games_db_col = ["id", "date", "season", "status", "period", "time", "postseason", "home_team_score", "visitor_team_score"]
+
+    all_games_df = pd.DataFrame(request_games_data)
+    for_all_games_db_df = all_games_df[for_all_games_db_col]
+
+    home_team_df = all_games_df["home_team"]
+    visitor_team_df = all_games_df["visitor_team"]
+    home_team_extract = home_team_df.apply(lambda id: id["id"])
+    visitor_team_extract = visitor_team_df.apply(lambda id: id["id"])
+
+    for_all_games_db_df["home_team_id"] = home_team_extract
+    for_all_games_db_df["visitor_team_id"] = visitor_team_extract
+
+
+    save_to_all_teams_list = ['team_id', 'team_conference', 'team_division','team_city', 'team_name', 'team_full_name', 'team_abbreviation']
+    insert_to_all_teams(for_all_games_db_df[save_to_all_teams_list])
+
+    print(for_all_games_db_df)
+    insert_to_all_games(for_all_games_db_df)
+
+
+
     while True:
         try:
             print("=== matchup data ===")

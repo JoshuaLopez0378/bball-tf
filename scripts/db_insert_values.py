@@ -15,40 +15,42 @@ db_conn = create_engine(sql_connection)
 
 
 
-def insert_to_all_stats(all_stats_list):
-    try:
-        all_stats_list.to_sql('all_stats', con=db_conn, if_exists='append', index=False)
-    except:
-        print("=== Stats already loaded ===")
-        return "stats already loaded"
+# def insert_to_all_stats(all_stats_list):
+#     try:
+#         all_stats_list.to_sql('all_stats', con=db_conn, if_exists='append', index=False)
+#     except:
+#         print("=== Stats already loaded ===")
+#         return "stats already loaded"
 
-def insert_to_all_players(all_players_list):
-    orig_players_col = list(all_players_list.columns)
-    renamed_players_col = dict(zip(orig_players_col[1:], ("_".join(col.split("_")[1:]) for col in orig_players_col[1:])))
-    all_players_list.rename(columns = renamed_players_col, inplace = True)
-    all_players_list = all_players_list.replace("'","''", regex=True)
+# def insert_to_all_players(all_players_list):
+#     orig_players_col = list(all_players_list.columns)
+#     renamed_players_col = dict(zip(orig_players_col[1:], ("_".join(col.split("_")[1:]) for col in orig_players_col[1:])))
+#     all_players_list.rename(columns = renamed_players_col, inplace = True)
+#     all_players_list = all_players_list.replace("'","''", regex=True)
 
-    print(all_players_list)
+#     print(all_players_list)
 
-    astypes = dict(zip([col for col in all_schema['all_players']['dtypes_df']], 
-                       [all_schema['all_players']['dtypes_df'][col] for col in all_schema['all_players']['dtypes_df']]))
+#     astypes = dict(zip([col for col in all_schema['all_players']['dtypes_df']], 
+#                        [all_schema['all_players']['dtypes_df'][col] for col in all_schema['all_players']['dtypes_df']]))
 
-    all_players_list = all_players_list.fillna(0).astype(astypes)
+#     all_players_list = all_players_list.fillna(0).astype(astypes)
 
-    try:
-        all_players_list.to_sql('all_players', con=db_conn, if_exists='append', index=False)
-    except exc.IntegrityError :
-        for record in all_players_list.values.tolist():
-            update_table('all_players', all_players_list.columns, record)
-    except Exception as e:
-        print("GENERAL")
-        print(type(e).__name__)
+#     try:
+#         all_players_list.to_sql('all_players', con=db_conn, if_exists='append', index=False)
+#     except exc.IntegrityError :
+#         for record in all_players_list.values.tolist():
+#             update_table('all_players', all_players_list.columns, record)
+#     except Exception as e:
+#         print("GENERAL")
+#         print(type(e).__name__)
 
 def insert_to_all_games(all_games_list):
-    orig_games_col = list(all_games_list.columns)
-    renamed_games_col = dict(zip(orig_games_col[1:], ("_".join(col.split("_")[1:]) for col in orig_games_col[1:])))
-    all_games_list.rename(columns = renamed_games_col, inplace = True)
-    games_record = all_games_list.head(1)
+    # orig_games_col = list(all_games_list.columns)
+    # renamed_games_col = dict(zip(orig_games_col[1:], ("_".join(col.split("_")[1:]) for col in orig_games_col[1:])))
+    # print("=== RENAMIND ===")
+    # print(renamed_games_col)
+    # all_games_list.rename(columns = renamed_games_col, inplace = True)
+    # games_record = all_games_list.head(1)
 
     # === NOTE: 
     # Commented code snippet for astype, since workaround for data types was to put ''
@@ -61,11 +63,12 @@ def insert_to_all_games(all_games_list):
     # print("dtypes")
     # print(games_record.dtypes)
     # print(games_record)
-
+    print("== SQL ==")
+    print(all_games_list)
     try:
-        games_record.to_sql('all_games', con=db_conn, if_exists='append', index=False)
+        all_games_list.to_sql('all_games', con=db_conn, if_exists='append', index=False)
     except exc.IntegrityError :
-        update_table('all_games', games_record.columns, games_record.values.tolist()[0])
+        update_table('all_games', all_games_list.columns, all_games_list.values.tolist()[0])
     except Exception as e:
         print("GENERAL")
         print(type(e).__name__)
