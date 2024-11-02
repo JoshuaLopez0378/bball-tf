@@ -58,12 +58,22 @@ def check_matchup(choice, request_games_data):
     for_all_games_db_df["visitor_team_id"] = visitor_team_extract
 
 
-    save_to_all_teams_list = ['team_id', 'team_conference', 'team_division','team_city', 'team_name', 'team_full_name', 'team_abbreviation']
-    insert_to_all_teams(for_all_games_db_df[save_to_all_teams_list])
+    print("====== loop ======")
+    print(home_team_df)
+    all_teams_df = pd.DataFrame([])
+    all_teams_df['id'] = home_team_df.map(lambda x: [i for i in x])
+    print(all_teams_df)
+    # save_to_all_teams_list = ['id', 'conference', 'division','city', 'name', 'full_name', 'abbreviation']
+    # for i in save_to_all_teams_list:
+    #     extracted_data = home_team_extract[i]
+    #     print(extracted_data)
+
+
+    # insert_to_all_teams(for_all_games_db_df[save_to_all_teams_list])
+
 
     print(for_all_games_db_df)
     insert_to_all_games(for_all_games_db_df)
-
 
 
     while True:

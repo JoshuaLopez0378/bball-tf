@@ -22,7 +22,7 @@ cur.execute("""
 
 cur.execute("""
             CREATE TABLE IF NOT EXISTS all_games(
-                game_id VARCHAR(16) PRIMARY KEY,
+                id VARCHAR(16) PRIMARY KEY,
                 date DATE,
                 season INTEGER,
                 status VARCHAR(8),
