@@ -43,6 +43,9 @@ def check_games(date_yesterday):
 
     return all_games_list, request_games_data
 
+def test_fxn(df, col):
+    return df[col]
+
 def check_matchup(choice, request_games_data):
     for_all_games_db_col = ["id", "date", "season", "status", "period", "time", "postseason", "home_team_score", "visitor_team_score"]
 
@@ -53,28 +56,20 @@ def check_matchup(choice, request_games_data):
     visitor_team_df = all_games_df["visitor_team"]
     home_team_extract = home_team_df.apply(lambda id: id["id"])
     visitor_team_extract = visitor_team_df.apply(lambda id: id["id"])
-
     for_all_games_db_df["home_team_id"] = home_team_extract
     for_all_games_db_df["visitor_team_id"] = visitor_team_extract
 
+    # print("-ok-")
+    # print(home_team_df)
+    all_teams_df_temp = pd.DataFrame([])
 
-    print("====== loop ======")
-    print(home_team_df)
-    all_teams_df = pd.DataFrame([])
-    all_teams_df['id'] = home_team_df.map(lambda x: [i for i in x])
-    print(all_teams_df)
-    # save_to_all_teams_list = ['id', 'conference', 'division','city', 'name', 'full_name', 'abbreviation']
-    # for i in save_to_all_teams_list:
-    #     extracted_data = home_team_extract[i]
-    #     print(extracted_data)
+    save_to_all_teams_list = ['id', 'conference', 'division','city', 'name', 'full_name', 'abbreviation']
+    for i in save_to_all_teams_list:
+        all_teams_df_temp[i] = home_team_df.apply(test_fxn, col=i)
+        all_teams_df_temp[i] = visitor_team_df.apply(test_fxn, col=i)
 
-
-    # insert_to_all_teams(for_all_games_db_df[save_to_all_teams_list])
-
-
-    print(for_all_games_db_df)
+    insert_to_all_teams(all_teams_df_temp[save_to_all_teams_list])
     insert_to_all_games(for_all_games_db_df)
-
 
     while True:
         try:
@@ -200,3 +195,4 @@ def check_winner_game(json_matchup_details):
 
 def record_user_game(user_game_details):
     insert_to_user_stats(user_game_details)
+

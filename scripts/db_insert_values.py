@@ -65,13 +65,13 @@ def insert_to_all_games(all_games_list):
     # print(games_record)
     print("== SQL ==")
     print(all_games_list)
-    # try:
-    all_games_list.to_sql('all_games', con=db_conn, if_exists='append', index=False)
-    # except exc.IntegrityError :
-        # update_table('all_games', all_games_list.columns, all_games_list.values.tolist()[0])
-    # except Exception as e:
-    #     print("GENERAL")
-    #     print(type(e).__name__)
+    try:
+        all_games_list.to_sql('all_games', con=db_conn, if_exists='append', index=False)
+    except exc.IntegrityError :
+        update_table('all_games', all_games_list.columns, all_games_list.values.tolist()[0])
+    except Exception as e:
+        print("GENERAL")
+        print(type(e).__name__)
 
 
 def insert_to_all_teams(all_teams_list):
@@ -80,10 +80,10 @@ def insert_to_all_teams(all_teams_list):
     # all_teams_list.rename(columns = renamed_teams_col, inplace = True)
     # all_teams_list.drop_duplicates(inplace=True)
 
-    astypes = dict(zip([col for col in all_schema['all_teams']['dtypes_df']], 
-                       [all_schema['all_teams']['dtypes_df'][col] for col in all_schema['all_teams']['dtypes_df']]))
+    # astypes = dict(zip([col for col in all_schema['all_teams']['dtypes_df']], 
+                    #    [all_schema['all_teams']['dtypes_df'][col] for col in all_schema['all_teams']['dtypes_df']]))
 
-    all_teams_list = all_teams_list.fillna(0).astype(astypes)
+    all_teams_list = all_teams_list.fillna(0)
 
     try:
         all_teams_list.to_sql('all_teams', con=db_conn, if_exists='append', index=False)
