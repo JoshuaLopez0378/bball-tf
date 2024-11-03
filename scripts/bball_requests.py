@@ -11,7 +11,7 @@ headers = {
     "Authorization":API_KEY
 }
 
-def date_yesterday(days=1): # Ideal 2024-04-24
+def date_yesterday(days=12): # Note: 2024-2025 season started Oct 22
     now = datetime.today()
     yester_date = now - timedelta(days=days)
     string_date = yester_date.strftime('%Y-%m-%d')
