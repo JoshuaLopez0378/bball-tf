@@ -10,7 +10,7 @@ cur = conn.cursor()
 
 cur.execute("""
             CREATE TABLE IF NOT EXISTS all_teams(
-                id VARCHAR(16) PRIMARY KEY,
+                team_id VARCHAR(16) PRIMARY KEY,
                 conference VARCHAR(16),
                 division VARCHAR(16),
                 city VARCHAR(16),
@@ -22,7 +22,7 @@ cur.execute("""
 
 cur.execute("""
             CREATE TABLE IF NOT EXISTS all_games(
-                id VARCHAR(16) PRIMARY KEY,
+                game_id VARCHAR(16) PRIMARY KEY,
                 date DATE,
                 season INTEGER,
                 status VARCHAR(8),
@@ -31,8 +31,8 @@ cur.execute("""
                 postseason BOOL,
                 home_team_score INTEGER,
                 visitor_team_score INTEGER,
-                home_team_id VARCHAR(16) REFERENCES all_teams(id),
-                visitor_team_id VARCHAR(16) REFERENCES all_teams(id)
+                home_team_id VARCHAR(16) REFERENCES all_teams(team_id),
+                visitor_team_id VARCHAR(16) REFERENCES all_teams(team_id)
             );
             """)
 
@@ -43,7 +43,7 @@ cur.execute("""
                 team_id_opponent VARCHAR(16),
                 is_choice_win BOOL,
                 is_choice_home BOOL,
-                game_id VARCHAR(16) REFERENCES all_games(id)
+                game_id VARCHAR(16) REFERENCES all_games(game_id)
             );
             """)
 

@@ -65,8 +65,8 @@ def check_matchup(choice, request_games_data):
 
     save_to_all_teams_list = ['id', 'conference', 'division','city', 'name', 'full_name', 'abbreviation']
     for i in save_to_all_teams_list:
-        all_teams_df_temp[i] = home_team_df.apply(test_fxn, col=i)
-        all_teams_df_temp[i] = visitor_team_df.apply(test_fxn, col=i)
+        all_teams_df_temp[i] = pd.concat([home_team_df.apply(test_fxn, col=i), visitor_team_df.apply(test_fxn, col=i)])
+        # all_teams_df_temp[i] = visitor_team_df.apply(test_fxn, col=i)
 
     insert_to_all_teams(all_teams_df_temp[save_to_all_teams_list])
     insert_to_all_games(for_all_games_db_df)

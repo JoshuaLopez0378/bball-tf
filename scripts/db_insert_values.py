@@ -45,12 +45,17 @@ db_conn = create_engine(sql_connection)
 #         print(type(e).__name__)
 
 def insert_to_all_games(all_games_list):
-    # orig_games_col = list(all_games_list.columns)
-    # renamed_games_col = dict(zip(orig_games_col[1:], ("_".join(col.split("_")[1:]) for col in orig_games_col[1:])))
-    # print("=== RENAMIND ===")
-    # print(renamed_games_col)
-    # all_games_list.rename(columns = renamed_games_col, inplace = True)
-    # games_record = all_games_list.head(1)
+    orig_games_col = list(all_games_list.columns)
+    print("origgames")
+    print(orig_games_col)
+    renamed_games_col = dict(zip(orig_games_col[0:], ("_".join(col.split("_")[0:]) for col in orig_games_col[0:])))
+    # renamed_games_col = dict(zip([col for col in all_schema['all_games']['dtypes_df']],
+                                #  [all_schema['all_games']['dtypes_df'][col] for col in all_schema['all_games']['dtypes_df']]))
+    print("=== RENAMIND ===")
+    print(renamed_games_col)
+    all_games_list.rename(columns = renamed_games_col, inplace = True)
+    all_games_list.rename(columns = {"id" : "game_id"}, inplace=True)
+    games_record = all_games_list.head(1)
 
     # === NOTE: 
     # Commented code snippet for astype, since workaround for data types was to put ''
@@ -68,31 +73,37 @@ def insert_to_all_games(all_games_list):
     try:
         all_games_list.to_sql('all_games', con=db_conn, if_exists='append', index=False)
     except exc.IntegrityError :
-        update_table('all_games', all_games_list.columns, all_games_list.values.tolist()[0])
+        update_table('all_games', games_record.columns, games_record.values.tolist()[0])
     except Exception as e:
         print("GENERAL")
         print(type(e).__name__)
 
 
 def insert_to_all_teams(all_teams_list):
-    # orig_teams_col = list(all_teams_list)
-    # renamed_teams_col = dict(zip(orig_teams_col[1:], ("_".join(col.split("_")[1:]) for col in orig_teams_col[1:])))
-    # all_teams_list.rename(columns = renamed_teams_col, inplace = True)
+    orig_teams_col = list(all_teams_list)
+    renamed_teams_col = dict(zip(orig_teams_col[0:], ("_".join(col.split("_")[0:]) for col in orig_teams_col[0:])))
+    all_teams_list.rename(columns = renamed_teams_col, inplace = True)
+    all_teams_list.rename(columns = {"id" : "team_id"}, inplace=True)
+
     # all_teams_list.drop_duplicates(inplace=True)
 
     # astypes = dict(zip([col for col in all_schema['all_teams']['dtypes_df']], 
-                    #    [all_schema['all_teams']['dtypes_df'][col] for col in all_schema['all_teams']['dtypes_df']]))
+    #                    [all_schema['all_teams']['dtypes_df'][col] for col in all_schema['all_teams']['dtypes_df']]))
 
     all_teams_list = all_teams_list.fillna(0)
 
     try:
+        print("all teams try")
+        print(all_teams_list)
         all_teams_list.to_sql('all_teams', con=db_conn, if_exists='append', index=False)
     except exc.IntegrityError :
+        print("all teams exception")
+        print(all_teams_list.values.tolist())
         for record in all_teams_list.values.tolist():
             update_table('all_teams', all_teams_list.columns, record)
-    except:
+    except Exception as e:
         print("GENERAL")
-        # print(type(e).__name__)
+        print(type(e).__name__)
 
 
 def update_table(table_name, list_of_cols, list_of_values):
