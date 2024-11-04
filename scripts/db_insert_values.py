@@ -85,7 +85,7 @@ def insert_to_all_teams(all_teams_list):
     all_teams_list.rename(columns = renamed_teams_col, inplace = True)
     all_teams_list.rename(columns = {"id" : "team_id"}, inplace=True)
 
-    # all_teams_list.drop_duplicates(inplace=True)
+    all_teams_list.drop_duplicates(inplace=True)
 
     # astypes = dict(zip([col for col in all_schema['all_teams']['dtypes_df']], 
     #                    [all_schema['all_teams']['dtypes_df'][col] for col in all_schema['all_teams']['dtypes_df']]))
@@ -105,6 +105,12 @@ def insert_to_all_teams(all_teams_list):
         print("GENERAL")
         print(type(e).__name__)
 
+def insert_to_user_stats(user_game_details):
+    print("==== insert to user stats ====")
+    print(user_game_details)
+    pd_user_game_details = pd.DataFrame(user_game_details, index=[0])
+    print(pd_user_game_details)
+    pd_user_game_details.to_sql('user_games', con=db_conn, if_exists='append', index=False)
 
 def update_table(table_name, list_of_cols, list_of_values):
     pg_conn = pg.connect(database = "bballtf", 
@@ -131,9 +137,3 @@ def update_table(table_name, list_of_cols, list_of_values):
     print(f"=== Done updating {table_name} | {list_of_values[0]} ===")
 
 
-def insert_to_user_stats(user_game_details):
-    print("==== insert to user stats ====")
-    print(user_game_details)
-    pd_user_game_details = pd.DataFrame(user_game_details, index=[0])
-    print(pd_user_game_details)
-    pd_user_game_details.to_sql('user_games', con=db_conn, if_exists='append', index=False)
