@@ -7,26 +7,6 @@ conn = pg.connect(database = "bballtf",
 
 
 cur = conn.cursor()
-# Execute a command
-
-cur.execute("""
-            CREATE TABLE IF NOT EXISTS all_players(
-                player_id VARCHAR(16) PRIMARY KEY,
-                first_name VARCHAR(32),
-                last_name VARCHAR(32),
-                position VARCHAR(8),
-                height VARCHAR(8),
-                weight INTEGER,
-                jersey_number VARCHAR(4),
-                college VARCHAR(32),
-                country VARCHAR(32),
-                draft_year INTEGER,
-                draft_round INTEGER,
-                draft_number INTEGER,
-                team_id VARCHAR(4)
-            );
-            """)
-
 
 cur.execute("""
             CREATE TABLE IF NOT EXISTS all_teams(
@@ -55,42 +35,6 @@ cur.execute("""
                 visitor_team_id VARCHAR(16) REFERENCES all_teams(team_id)
             );
             """)
-
-cur.execute("""
-            CREATE TABLE IF NOT EXISTS all_stats(
-                id VARCHAR(16) PRIMARY KEY,
-                min INTEGER,
-                fgm INTEGER,
-                fga INTEGER,
-                fg_pct FLOAT,
-                fg3m INTEGER,
-                fg3a INTEGER,
-                fg3_pct FLOAT,
-                ftm INTEGER,
-                fta INTEGER,
-                ft_pct FLOAT,
-                oreb INTEGER,
-                dreb INTEGER,
-                reb INTEGER,
-                ast INTEGER,
-                stl INTEGER,
-                blk INTEGER,
-                turnover INTEGER,
-                pf INTEGER,
-                pts INTEGER,
-                player_id VARCHAR(16) REFERENCES all_players(player_id),
-                game_id VARCHAR(16) REFERENCES all_games(game_id)
-            );
-            """)
-
-# cur.execute("""
-#             CREATE TABLE IF NOT EXISTS user_stats(
-#                 user_id VARCHAR(16) PRIMARY KEY,
-#                 uname VARCHAR(16),
-#                 num_of_guesses INTEGER,
-#                 wins INTEGER
-#             );
-#             """)
 
 cur.execute("""
             CREATE TABLE IF NOT EXISTS user_games(

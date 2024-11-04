@@ -4,14 +4,14 @@ import pandas as pd
 import numpy as np
 import json
 from scripts.constants import API_KEY, games_url
-from scripts.db_insert_values import insert_to_user_stats
+from scripts.db_insert_values import insert_to_user_stats, insert_to_all_games, insert_to_all_teams
 
 headers = {
     "accept":"application/json",
     "Authorization":API_KEY
 }
 
-def date_yesterday(days=1): # Ideal 2024-04-24
+def date_yesterday(days=12): # Note: 2024-2025 season started Oct 22
     now = datetime.today()
     yester_date = now - timedelta(days=days)
     string_date = yester_date.strftime('%Y-%m-%d')
@@ -24,22 +24,53 @@ def check_games(date_yesterday):
 
     # Perform get request and take result
     request_games = requests.get(url=f"{games_url}{today_date_url_param}", headers=headers)
-    # print("=== ALL GAMES RESULT ===") ------------------------------
     request_games_result = request_games.json()
     request_games_data = request_games_result["data"]
 
-    # For DB ------------------------------
-    # print("------------------------------")
-    # print(request_games_data)
+    # print("-------------- DBATASBE ----------------")
+    print(request_games_data)
 
     # List all games, "home vs away" format
+
+
+    # insert_to_all_games(for_all_games_db_df)
+
     all_games_list = [f"{res[0] + 1} | {res[1]['home_team']['full_name']} VS {res[1]['visitor_team']['full_name']}" for res in enumerate(request_games_data)]
     # print(all_games_list)
 
     
+
+
     return all_games_list, request_games_data
 
+def test_fxn(df, col):
+    return df[col]
+
 def check_matchup(choice, request_games_data):
+    for_all_games_db_col = ["id", "date", "season", "status", "period", "time", "postseason", "home_team_score", "visitor_team_score"]
+
+    all_games_df = pd.DataFrame(request_games_data)
+    for_all_games_db_df = all_games_df[for_all_games_db_col]
+
+    home_team_df = all_games_df["home_team"]
+    visitor_team_df = all_games_df["visitor_team"]
+    home_team_extract = home_team_df.apply(lambda id: id["id"])
+    visitor_team_extract = visitor_team_df.apply(lambda id: id["id"])
+    for_all_games_db_df["home_team_id"] = home_team_extract
+    for_all_games_db_df["visitor_team_id"] = visitor_team_extract
+
+    # print("-ok-")
+    # print(home_team_df)
+    all_teams_df_temp = pd.DataFrame([])
+
+    save_to_all_teams_list = ['id', 'conference', 'division','city', 'name', 'full_name', 'abbreviation']
+    for i in save_to_all_teams_list:
+        all_teams_df_temp[i] = pd.concat([home_team_df.apply(test_fxn, col=i), visitor_team_df.apply(test_fxn, col=i)])
+        # all_teams_df_temp[i] = visitor_team_df.apply(test_fxn, col=i)
+
+    insert_to_all_teams(all_teams_df_temp[save_to_all_teams_list])
+    insert_to_all_games(for_all_games_db_df)
+
     while True:
         try:
             print("=== matchup data ===")
@@ -164,3 +195,4 @@ def check_winner_game(json_matchup_details):
 
 def record_user_game(user_game_details):
     insert_to_user_stats(user_game_details)
+
