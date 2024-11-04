@@ -16,7 +16,6 @@ json_matchup_details, user_game_details = check_matchup(choice, request_games_da
 json_matchup_details_load = json.loads(json_matchup_details)
 
 team_ids = {"home": json_matchup_details_load["home"]["team_id"], "visitor": json_matchup_details_load["visitor"]["team_id"]}
-# stats_list = check_team_stats(json_matchup_details)
 
 print("===== JSON MATCHUP DETIALS ======")
 print(json_matchup_details)

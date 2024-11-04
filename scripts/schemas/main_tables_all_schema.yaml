@@ -23,3 +23,17 @@ all_teams:
     name: "object"
     full_name: "object"
     abbreviation: "object"
+
+all_games:
+  dtypes_df:
+    game_id: "object"
+    date: "object"
+    season: "object"
+    status: "object"
+    period: "object"
+    time: "object"
+    postseason: "object"
+    home_team_score: "object"
+    visitor_team_score: "object"
+    home_team_id: "object"
+    visitor_team_id: "object"
