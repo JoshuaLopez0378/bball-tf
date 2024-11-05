@@ -3,24 +3,31 @@ import sqlite3
 import click
 from flask import current_app, g
 from flask_migrate import Migrate
+from sqlalchemy import create_engine, exc
+
 
 
 def get_db():
-    if 'db' not in g:
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
-        g.db.row_factory = sqlite3.Row
+    # if 'db' not in g:
+        # g.db = sqlite3.connect(
+            # current_app.config['DATABASE'],
+            # detect_types=sqlite3.PARSE_DECLTYPES
+        # )
+        # g.db.row_factory = sqlite3.Row
+    # return g.db
+    
+    sql_connection = 'postgresql://postgres:postgres@localhost:5432/bballtf'
+    db_conn = create_engine(sql_connection)
 
-    return g.db
+    return db_conn
 
 
 def close_db(e=None):
-    db = g.pop('db', None)
+    # db = g.pop('db', None)
 
-    if db is not None:
-        db.close()
+    # if db is not None:
+    #     db.close()
+    pass
 
 def init_db():
     db = get_db()
