@@ -15,6 +15,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         db = get_db()
+        cursor = db.cursor()
         error = None
 
         if not username:
@@ -24,12 +25,12 @@ def register():
 
         if error is None:
             try:
-                db.execute(
+                cursor.execute(
                     "INSERT INTO user (username, password) VALUES (?, ?)",
                     (username, generate_password_hash(password)),
                 )
-                db.commit()
-            except db.IntegrityError:
+                cursor.commit()
+            except cursor.IntegrityError:
                 error = f"User {username} is already registered."
             else:
                 return redirect(url_for("auth.login"))
@@ -46,7 +47,8 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.execute(
+        cursor = db.cursor()
+        user = cursor.execute(
             'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
 
@@ -68,11 +70,13 @@ def login():
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
+    db = get_db()
+    cursor = db.cursor()
 
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
+        g.user = cursor.execute(
             'SELECT * FROM user WHERE id = ?', (user_id,)
         ).fetchone()
 

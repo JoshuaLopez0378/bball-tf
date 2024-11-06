@@ -11,11 +11,13 @@ bp = Blueprint('nbatf', __name__)
 @bp.route('/')
 def index():
     db = get_db()
-    posts = db.execute(
+    cursor = db.cursor()
+    posts = cursor.execute(
         'SELECT p.id, title, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
+    db.commit()
     return render_template('nbatf/index.html', posts=posts)
 
 

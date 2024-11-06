@@ -1,5 +1,5 @@
 import sqlite3
-
+import psycopg2 as pg
 import click
 from flask import current_app, g
 from flask_migrate import Migrate
@@ -16,10 +16,18 @@ def get_db():
         # g.db.row_factory = sqlite3.Row
     # return g.db
     
-    sql_connection = 'postgresql://postgres:postgres@localhost:5432/bballtf'
-    db_conn = create_engine(sql_connection)
+    # sql_connection = 'postgresql://postgres:postgres@localhost:5432/bballtf'
+    # db_conn = create_engine(sql_connection)
 
-    return db_conn
+    pg_conn = pg.connect(database = "bballtf", 
+                    user = "postgres", 
+                    host= 'localhost',
+                    password = "postgres",
+                    port = 5432)
+
+    # return db_conn.connect()
+    # conn = db_conn.connect()
+    return pg_conn
 
 
 def close_db(e=None):
