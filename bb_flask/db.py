@@ -18,17 +18,18 @@ def get_db():
     
     # sql_connection = 'postgresql://postgres:postgres@localhost:5432/bballtf'
     # db_conn = create_engine(sql_connection)
-
+    # return db_conn.connect()
+    # conn = db_conn.connect() 
+    
     pg_conn = pg.connect(database = "bballtf", 
                     user = "postgres", 
                     host= 'localhost',
                     password = "postgres",
                     port = 5432)
 
-    # return db_conn.connect()
-    # conn = db_conn.connect()
-    return pg_conn
 
+    return pg_conn
+ 
 
 def close_db(e=None):
     # db = g.pop('db', None)

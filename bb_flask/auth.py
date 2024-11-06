@@ -49,8 +49,13 @@ def login():
         error = None
         cursor = db.cursor()
         user = cursor.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
+            f"SELECT * FROM user_accs WHERE username = '{username}'"
+        )
+        # user = cursor.execute(
+            # "SELECT EXISTS ( SELECT FROM user WHERE  table_name   = 'user_accs');"
+        # )
+        print("=== useruseruser ===")
+        print(user)
 
         if user is None:
             error = 'Incorrect username.'
@@ -77,8 +82,10 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = cursor.execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+            f'SELECT * FROM user_accs WHERE id = {user_id}'
+        )
+        print("===== =========")
+        print(g.user)
 
 
 @bp.route('/logout')
