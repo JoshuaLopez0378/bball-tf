@@ -13,9 +13,8 @@ def index():
     db = get_db()
     cursor = db.cursor()
     posts = cursor.execute(
-        'SELECT p.id, title, body, created, author_id, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' ORDER BY created DESC'
+        'SELECT *'
+        ' FROM user_games'
     ).fetchall()
     db.commit()
     return render_template('nbatf/index.html', posts=posts)
