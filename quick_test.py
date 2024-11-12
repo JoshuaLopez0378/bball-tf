@@ -20,10 +20,11 @@ try:
     cursor = db.cursor()
     posts = cursor.execute(
         'SELECT *'
-        ' FROM user_games'
-    ).fetchall()
+        ' FROM user_accs'
+    )
+    posts_res = cursor.fetchall()
     db.commit()
-    print(db)
+    print(posts_res)
 except:
     pg_conn = pg.connect(database = "bballtf", 
                     user = "postgres", 
