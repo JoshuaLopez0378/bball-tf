@@ -12,10 +12,11 @@ bp = Blueprint('nbatf', __name__)
 def index():
     db = get_db()
     cursor = db.cursor()
-    posts = cursor.execute(
+    cursor.execute(
         'SELECT *'
         ' FROM user_games'
-    ).fetchall()
+    )
+    posts = cursor.fetchall()
     db.commit()
     return render_template('nbatf/index.html', posts=posts)
 

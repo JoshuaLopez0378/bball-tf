@@ -18,7 +18,7 @@ import psycopg2 as pg
 try:
     db = get_db()
     cursor = db.cursor()
-    posts = cursor.execute(
+    cursor.execute(
         'SELECT *'
         ' FROM user_accs'
     )
