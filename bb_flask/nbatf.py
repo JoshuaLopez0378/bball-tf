@@ -16,9 +16,10 @@ def index():
         'SELECT *'
         ' FROM user_games'
     )
-    posts = cursor.fetchall()
+    games = cursor.fetchall()
+    print(games)
     db.commit()
-    return render_template('nbatf/index.html', posts=posts)
+    return render_template('nbatf/index.html', game=games)
 
 
 @bp.route('/nbacreate', methods=('GET', 'POST'))
