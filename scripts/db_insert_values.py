@@ -49,7 +49,11 @@ def insert_to_all_games(all_games_list):
     # try:
     # all_games_list.to_sql("all_games", con=db_conn, if_exists="append", index=False)
     # except exc.IntegrityError:
-    update_table("all_games", games_record.columns, games_record.values.tolist()[0])
+    # for record in
+    print("====== all games record tolist ========")
+    # print(all_games_list.values.tolist()[0])
+    for record in all_games_list.values.tolist():
+        update_table("all_games", all_games_list.columns, record)
     # except Exception as e:
     #     print("GENERAL")
     #     print(type(e).__name__)
@@ -80,6 +84,7 @@ def insert_to_all_teams(all_teams_list):
     print("all teams exception")
     print(all_teams_list.values.tolist())
     for record in all_teams_list.values.tolist():
+        print("recordrecord", record)
         update_table("all_teams", all_teams_list.columns, record)
     # except Exception as e:
     #     print("GENERAL")
@@ -110,6 +115,9 @@ def update_table(table_name, list_of_cols, list_of_values):
 
     insert_col = [coln for coln in list_of_cols[0:]]
     insert_val = [f"'{coln}'" for coln in list_of_values[0:]]
+
+    print("===== insert col games =======", insert_col)
+    print("===== insert values games =======", insert_val)
 
     col_conflict = "user_game_id"
     if table_name == "all_teams":
