@@ -30,7 +30,6 @@ def insert_to_all_games(all_games_list):
     print(renamed_games_col)
     all_games_list.rename(columns=renamed_games_col, inplace=True)
     all_games_list.rename(columns={"id": "game_id"}, inplace=True)
-    games_record = all_games_list.head(1)
 
     # === NOTE:
     # Commented code snippet for astype, since workaround for data types was to put ''
@@ -46,17 +45,8 @@ def insert_to_all_games(all_games_list):
 
     print("== SQL ==")
     print(all_games_list)
-    # try:
-    # all_games_list.to_sql("all_games", con=db_conn, if_exists="append", index=False)
-    # except exc.IntegrityError:
-    # for record in
-    print("====== all games record tolist ========")
-    # print(all_games_list.values.tolist()[0])
     for record in all_games_list.values.tolist():
         update_table("all_games", all_games_list.columns, record)
-    # except Exception as e:
-    #     print("GENERAL")
-    #     print(type(e).__name__)
 
 
 def insert_to_all_teams(all_teams_list):
@@ -76,19 +66,11 @@ def insert_to_all_teams(all_teams_list):
 
     all_teams_list = all_teams_list.fillna(0)
 
-    # try:
-    #     print("all teams try")
-    #     print(all_teams_list)
-    #     all_teams_list.to_sql("all_teams", con=db_conn, if_exists="append", index=False)
-    # except exc.IntegrityError:
     print("all teams exception")
     print(all_teams_list.values.tolist())
     for record in all_teams_list.values.tolist():
         print("recordrecord", record)
         update_table("all_teams", all_teams_list.columns, record)
-    # except Exception as e:
-    #     print("GENERAL")
-    #     print(type(e).__name__)
 
 
 def insert_to_user_stats(user_game_details):
@@ -135,11 +117,6 @@ def update_table(table_name, list_of_cols, list_of_values):
         DO NOTHING
     """
 
-    # sql_statement = f"""
-    #     UPDATE {table_name}
-    #     SET {update_set}
-    #     WHERE {list_of_cols[0]} = {str(list_of_values[0])}::VARCHAR(16);
-    # """
 
     print("=== sql statement ===")
     print(sql_statement)
