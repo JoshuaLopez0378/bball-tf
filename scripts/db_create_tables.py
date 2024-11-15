@@ -1,14 +1,18 @@
 import psycopg2 as pg
-conn = pg.connect(database = "bballtf", 
-                        user = "postgres", 
-                        host= 'localhost',
-                        password = "postgres",
-                        port = 5432)
+
+conn = pg.connect(
+    database="bballtf",
+    user="postgres",
+    host="localhost",
+    password="postgres",
+    port=5432,
+)
 
 
 cur = conn.cursor()
 
-cur.execute("""
+cur.execute(
+    """
             CREATE TABLE IF NOT EXISTS all_teams(
                 team_id VARCHAR(16) PRIMARY KEY,
                 conference VARCHAR(16),
@@ -18,9 +22,11 @@ cur.execute("""
                 full_name VARCHAR(32),
                 abbreviation VARCHAR(8)
             );
-            """)
+            """
+)
 
-cur.execute("""
+cur.execute(
+    """
             CREATE TABLE IF NOT EXISTS all_games(
                 game_id VARCHAR(16) PRIMARY KEY,
                 date DATE,
@@ -34,9 +40,11 @@ cur.execute("""
                 home_team_id VARCHAR(16) REFERENCES all_teams(team_id),
                 visitor_team_id VARCHAR(16) REFERENCES all_teams(team_id)
             );
-            """)
+            """
+)
 
-cur.execute("""
+cur.execute(
+    """
             CREATE TABLE IF NOT EXISTS user_games(
                 user_game_id SERIAL PRIMARY KEY,
                 team_id_choice VARCHAR(16),
@@ -45,7 +53,8 @@ cur.execute("""
                 is_choice_home BOOL,
                 game_id VARCHAR(16) REFERENCES all_games(game_id)
             );
-            """)
+            """
+)
 
 
 # Make the changes to the database persistent``
@@ -53,4 +62,3 @@ conn.commit()
 # Close cursor and communication with the database
 cur.close()
 conn.close()
-
