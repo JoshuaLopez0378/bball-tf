@@ -1,5 +1,11 @@
 import json
-from scripts.bball_requests import date_yesterday, check_games, check_matchup, check_winner_game, record_user_game
+from scripts.bball_requests import (
+    date_yesterday,
+    check_games,
+    check_matchup,
+    check_winner_game,
+    record_user_game,
+)
 
 print("Start")
 
@@ -15,7 +21,10 @@ choice = int(input("Choice: "))
 json_matchup_details, user_game_details = check_matchup(choice, request_games_data)
 json_matchup_details_load = json.loads(json_matchup_details)
 
-team_ids = {"home": json_matchup_details_load["home"]["team_id"], "visitor": json_matchup_details_load["visitor"]["team_id"]}
+team_ids = {
+    "home": json_matchup_details_load["home"]["team_id"],
+    "visitor": json_matchup_details_load["visitor"]["team_id"],
+}
 
 print("===== JSON MATCHUP DETIALS ======")
 print(json_matchup_details)

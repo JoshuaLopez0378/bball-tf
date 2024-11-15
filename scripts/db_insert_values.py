@@ -117,7 +117,6 @@ def update_table(table_name, list_of_cols, list_of_values):
         DO NOTHING
     """
 
-
     print("=== sql statement ===")
     print(sql_statement)
     cur = pg_conn.cursor()
