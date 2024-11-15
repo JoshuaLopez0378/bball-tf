@@ -26,8 +26,6 @@ def insert_to_all_games(all_games_list):
     )
     # renamed_games_col = dict(zip([col for col in all_schema['all_games']['dtypes_df']],
     #  [all_schema['all_games']['dtypes_df'][col] for col in all_schema['all_games']['dtypes_df']]))
-    print("=== RENAMIND ===")
-    print(renamed_games_col)
     all_games_list.rename(columns=renamed_games_col, inplace=True)
     all_games_list.rename(columns={"id": "game_id"}, inplace=True)
 
@@ -43,8 +41,6 @@ def insert_to_all_games(all_games_list):
     # print(games_record.dtypes)
     # print(games_record)
 
-    print("== SQL ==")
-    print(all_games_list)
     for record in all_games_list.values.tolist():
         update_table("all_games", all_games_list.columns, record)
 
@@ -98,9 +94,6 @@ def update_table(table_name, list_of_cols, list_of_values):
     insert_col = [coln for coln in list_of_cols[0:]]
     insert_val = [f"'{coln}'" for coln in list_of_values[0:]]
 
-    print("===== insert col games =======", insert_col)
-    print("===== insert values games =======", insert_val)
-
     col_conflict = "user_game_id"
     if table_name == "all_teams":
         col_conflict = "team_id"
@@ -108,8 +101,6 @@ def update_table(table_name, list_of_cols, list_of_values):
         col_conflict = "game_id"
 
     # insert_col = tuple(coln for coln)
-    print("first col")
-    print(insert_col[0])
     sql_statement = f""" 
         INSERT INTO {table_name} ({', '.join(insert_col)})
         VALUES ({", ".join(insert_val)})
@@ -117,8 +108,6 @@ def update_table(table_name, list_of_cols, list_of_values):
         DO NOTHING
     """
 
-    print("=== sql statement ===")
-    print(sql_statement)
     cur = pg_conn.cursor()
     cur.execute(sql_statement)
 
