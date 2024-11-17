@@ -20,7 +20,7 @@ import psycopg2 as pg
 try:
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT *" " FROM user_accs")
+    cursor.execute("SELECT *" " FROM user_accs username = 'z'")
     posts_res = cursor.fetchall()
     db.commit()
     print(posts_res)
@@ -32,12 +32,12 @@ except:
         password="postgres",
         port=5432,
     )
-    sql_statement = "select * from user_games"
+    sql_statement = "select * from user_accs where username = 'z'"
     cur = pg_conn.cursor()
     cur.execute(sql_statement)
     res = cur.fetchall()
     print(res)
 
-colsing = ["test", "1"]
-coldoub = ["test", "2"]
-print(colsing, coldoub)
+# colsing = ["test", "1"]
+# coldoub = ["test", "2"]
+# print(colsing, coldoub)

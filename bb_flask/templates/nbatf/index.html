@@ -2,12 +2,12 @@
 <h1>{% block title %}NBATF{% endblock %}</h1>
 {% if g.user %}
 <a class="action" href="{{ url_for('nbatf.create') }}">New</a>
-{% endif %} {% endblock %} {% block content %} {% for game in games %}
+{% endif %} {% endblock %} {% block content %} {% for games in game %}
 <article class="post">
   <header>
     <div>
-      <h1>{{ games['title'] }}</h1>
-      <div class="about">by {{ games['user_game_id'] }} on</div>
+      <h1>{{ games[0] }}</h1>
+      <div class="about">by {{ games[-1] }} on</div>
     </div>
   </header>
 </article>
