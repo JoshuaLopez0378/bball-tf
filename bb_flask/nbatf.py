@@ -15,8 +15,15 @@ def index():
     games = cursor.fetchall()
     print("== games ==")
     print(games)
+    print("=== cursor desc ===")
+    # print(cursor.description[0])
+    col_names = [description[0] for description in cursor.description]
+    print(col_names)
+    print("=== game zip ===")
+    game_zip = [dict(zip(col_names, game_res)) for game_res in games]
+    print(game_zip)
     # db.commit()
-    return render_template("nbatf/index.html", game=games)
+    return render_template("nbatf/index.html", game=game_zip)
 
 
 @bp.route("/nbacreate", methods=("GET", "POST"))
