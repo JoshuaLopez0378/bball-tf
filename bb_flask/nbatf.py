@@ -22,6 +22,7 @@ def index():
             on at2.team_id = ug.team_id_choice 
         inner join all_teams at3 
             on at3.team_id = ug.team_id_opponent
+        order by ug.user_game_id desc
     """
     cursor = db.cursor()
     cursor.execute(query)
