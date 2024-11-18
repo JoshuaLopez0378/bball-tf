@@ -6,8 +6,10 @@
 <article class="post">
   <header>
     <div>
-      <h1>{{ games['user_game_id'] }}</h1>
-      <div class="about">by {{ games['user_game_id'] }} on</div>
+      <h1>{{ games['game_id'] }}</h1>
+      <h2></h2>
+      <div class="about"> Pick: {{ games['choice_full_name'] }} | Opp: {{ games['opp_full_name'] }} </div>
+      <h3>Status: {{games['is_choice_win']}}</h3>
     </div>
   </header>
 </article>

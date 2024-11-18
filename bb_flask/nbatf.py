@@ -10,8 +10,21 @@ bp = Blueprint("nbatf", __name__)
 @bp.route("/")
 def index():
     db = get_db()
+    query = """
+        SELECT 
+            ug.user_game_id, ug.team_id_choice, at2.full_name as choice_full_name, ug.team_id_opponent, at3.full_name as opp_full_name, 
+            case 
+                when ug.is_choice_win = true then 'WIN'
+                else 'LOSE'
+            end as is_choice_win, ug.is_choice_home, ug.game_id 
+        FROM user_games ug 
+        inner join all_teams at2 
+            on at2.team_id = ug.team_id_choice 
+        inner join all_teams at3 
+            on at3.team_id = ug.team_id_opponent
+    """
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM user_games")
+    cursor.execute(query)
     games = cursor.fetchall()
     print("== games ==")
     print(games)
