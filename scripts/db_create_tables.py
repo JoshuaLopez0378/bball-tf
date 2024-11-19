@@ -56,6 +56,15 @@ cur.execute(
             """
 )
 
+cur.execute(
+    """
+            CREATE TABLE IF NOT EXISTS user_accs(
+                user_id VARCHAR(16) PRIMARY KEY,
+                username VARCHAR(50),
+                password VARCHAR(256)
+            );
+            """
+)
 
 # Make the changes to the database persistent``
 conn.commit()

@@ -1,5 +1,4 @@
-import functools
-
+import functools, os, hashlib
 from flask import (
     Blueprint,
     flash,
@@ -34,7 +33,7 @@ def register():
         if error is None:
             # try:
             cursor.execute(
-                f"INSERT INTO user_accs (username, password) VALUES ('{username}', '{password}')"
+                f"INSERT INTO user_accs (username, password) VALUES ('{username}', '{generate_password_hash(password)}')"
                 # (, /),
             )
             db.commit()
@@ -90,7 +89,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = cursor.execute(f"SELECT * FROM user_accs WHERE id = {user_id}")
+        g.user = cursor.execute(f"SELECT * FROM user_accs WHERE user_id = {user_id}")
         print("===== =========")
         print(g.user)
 
