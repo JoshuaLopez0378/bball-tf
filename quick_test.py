@@ -41,3 +41,16 @@ except:
 # colsing = ["test", "1"]
 # coldoub = ["test", "2"]
 # print(colsing, coldoub)
+col = ["user_id", "username", "password"]
+tup = (
+    2,
+    "c",
+    "scrypt:32768:8:1$LJbQnisoRErDl8Ag$85e8e4f57540a9fbefc70f43d29077fce4c7b3c5ac36995a968ba8dfc7bc8a6e6f0f053ef1f5d34eccd777a79606f574b4c6d20e5fce16eab0643b49290e19ad",
+)
+tuplist = list(str(i) for i in tup)
+# print(tuplist)
+print(col)
+print(tuplist)
+# user_zip = [dict(zip(col, user)) for user in tuplist]
+user_zip = {col[i]: tuplist[i] for i in range(len(col))}
+print(user_zip)

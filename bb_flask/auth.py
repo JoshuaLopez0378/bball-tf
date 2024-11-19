@@ -89,8 +89,18 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = cursor.execute(f"SELECT * FROM user_accs WHERE user_id = {user_id}")
+        cursor.execute(f"SELECT * FROM user_accs WHERE user_id = {user_id}")
         print("===== =========")
+        col_names = [description[0] for description in cursor.description]
+        print("colnames", col_names)
+        users = cursor.fetchall()[0]
+        print("users fetch", users)
+
+        # user_zip = [dict(zip(col_names, user)) for user in users]
+        user_zip = {col_names[i]: users[i] for i in range(len(users))}
+
+        print("user zip", user_zip)
+        g.user = user_zip
         print(g.user)
 
 
