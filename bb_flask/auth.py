@@ -57,24 +57,31 @@ def login():
         cursor = db.cursor()
         print("=== suername ===")
         print(username)
+        # try:
         cursor.execute(f"SELECT * FROM user_accs WHERE username = '{username}'")
         # user = cursor.execute(
         # "SELECT EXISTS ( SELECT FROM user WHERE  table_name   = 'user_accs');"
         # )
         user = cursor.fetchall()[0]
+        col_names = [description[0] for description in cursor.description]
+        user_zip = {col_names[i]: user[i] for i in range(len(user))}
         print("=== useruseruser ===")
         print(user)
+        print(user_zip)
 
         if user is None:
             error = "Incorrect username."
-        elif not password:
+        elif not check_password_hash(user_zip["password"], password):
             error = "Incorrect password."
+        # elif :
 
         if error is None:
             session.clear()
             session["user_id"] = user[0]
             return redirect(url_for("index"))
-
+        # except:
+        # flash(error)
+        #
         flash(error)
 
     return render_template("auth/login.html")
@@ -89,19 +96,22 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        cursor.execute(f"SELECT * FROM user_accs WHERE user_id = {user_id}")
-        print("===== =========")
-        col_names = [description[0] for description in cursor.description]
-        print("colnames", col_names)
-        users = cursor.fetchall()[0]
-        print("users fetch", users)
+        try:
+            cursor.execute(f"SELECT * FROM user_accs WHERE user_id = {user_id}")
+            print("===== =========")
+            col_names = [description[0] for description in cursor.description]
+            print("colnames", col_names)
+            users = cursor.fetchall()[0]
+            print("users fetch", users)
 
-        # user_zip = [dict(zip(col_names, user)) for user in users]
-        user_zip = {col_names[i]: users[i] for i in range(len(users))}
+            # user_zip = [dict(zip(col_names, user)) for user in users]
+            user_zip = {col_names[i]: users[i] for i in range(len(users))}
 
-        print("user zip", user_zip)
-        g.user = user_zip
-        print(g.user)
+            print("user zip", user_zip)
+            g.user = user_zip
+            print(g.user)
+        except:
+            print("no user")
 
 
 @bp.route("/logout")
