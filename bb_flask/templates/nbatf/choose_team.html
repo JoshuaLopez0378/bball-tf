@@ -1,16 +1,10 @@
 {% extends 'base.html' %} {% block header %}
 <h1>{% block title %}New game{% endblock %}</h1>
 {% endblock %} {% block content %}
-<a>test</a>
-{% for games in all_games %}
-{% if not loop.last %}
-<h3>{{ games }}</h3>
-{% endif %} {% endfor %}
 <form method="post">
   <label for="title">game</label>
   <!-- <input name="game" id="game" value="{{ request.form['game'] }}" required /> -->
-  <input name="game_choice" id="game_choice" required />
+  <input name="game" id="game" required />
   <input type="submit" value="Save" />
 </form>
-
 {% endblock %}

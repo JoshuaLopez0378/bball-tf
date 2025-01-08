@@ -3,6 +3,14 @@ from werkzeug.exceptions import abort
 
 from bb_flask.auth import login_required
 from bb_flask.db import get_db
+from scripts.bball_requests_web import (
+    date_yesterday,
+    check_games,
+    check_matchup,
+    check_winner_game,
+    record_user_game,
+)
+
 
 bp = Blueprint("nbatf", __name__)
 
@@ -43,26 +51,32 @@ def index():
 @bp.route("/nbacreate", methods=("GET", "POST"))
 @login_required
 def create():
+    string_date = date_yesterday()
+    all_games_list = check_games(string_date)
     if request.method == "POST":
-        title = request.form["title"]
-        body = request.form["body"]
+        # db = get_db()
+        # query = """
+        # """
+
+        game_choice = request.form["game_choice"]
+        # body = request.form["body"]
         error = None
 
-        if not title:
-            error = "Title is required."
+        if not game_choice:
+            error = "choose"
 
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute(
-                "INSERT INTO post (title, body, author_id)" " VALUES (?, ?, ?)",
-                (title, body, g.user["id"]),
-            )
-            db.commit()
+            # db = get_db()
+            # db.execute(
+            #     "INSERT INTO post (title, body, author_id)" " VALUES (?, ?, ?)",
+            #     (title, body, g.user["id"]),
+            # )
+            # db.commit()
             return redirect(url_for("nbatf.index"))
 
-    return render_template("nbatf/choose_game.html")
+    return render_template("nbatf/choose_game.html", all_games=all_games_list)
 
 
 def get_post(id, check_author=True):
