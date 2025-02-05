@@ -62,27 +62,31 @@ def login():
         # user = cursor.execute(
         # "SELECT EXISTS ( SELECT FROM user WHERE  table_name   = 'user_accs');"
         # )
-        user = cursor.fetchall()[0]
-        col_names = [description[0] for description in cursor.description]
-        user_zip = {col_names[i]: user[i] for i in range(len(user))}
-        print("=== useruseruser ===")
-        print(user)
-        print(user_zip)
+        try:
+            user = cursor.fetchall()[0]
+            col_names = [description[0] for description in cursor.description]
+            user_zip = {col_names[i]: user[i] for i in range(len(user))}
+            print("=== useruseruser ===")
+            print(user)
+            print(user_zip)
 
-        if user is None:
-            error = "Incorrect username."
-        elif not check_password_hash(user_zip["password"], password):
-            error = "Incorrect password."
-        # elif :
+            if user is None:
+                error = "Incorrect username."
+            elif not check_password_hash(user_zip["password"], password):
+                error = "Incorrect password."
+            # elif :
 
-        if error is None:
-            session.clear()
-            session["user_id"] = user[0]
-            return redirect(url_for("index"))
-        # except:
-        # flash(error)
-        #
-        flash(error)
+            if error is None:
+                session.clear()
+                session["user_id"] = user[0]
+                return redirect(url_for("index"))
+
+            # except:
+            # flash(error)
+            #
+            flash(error)
+        except IndexError:
+            flash("Not exist")
 
     return render_template("auth/login.html")
 
